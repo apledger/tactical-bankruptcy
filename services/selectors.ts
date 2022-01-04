@@ -20,15 +20,19 @@ export function getNextRound(state: State): Round {
   return state.rounds[state.activeRoundIndex + 1]
 }
 
-export function getHasActivePlayerPassed(state: State): boolean {
-  const activePlayer = getActivePlayer(state)
-
+export function getHasPlayerPassed(state: State, color): boolean {
   return state.turns.some(
     turn =>
-      turn.playerColor === activePlayer.color &&
+      turn.playerColor === color &&
       turn.roundIndex === state.activeRoundIndex &&
       turn.type === 'pass',
   )
+}
+
+export function getHasActivePlayerPassed(state: State): boolean {
+  const activePlayer = getActivePlayer(state)
+
+  return getHasPlayerPassed(state, activePlayer.color)
 }
 
 export function getNextPlayerIndex(state: State): number {
