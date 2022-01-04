@@ -4,7 +4,7 @@ type Props = {
   startTime: number
 }
 
-export function msToHMS(ms: number): string {
+function msToMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60),
     minutes = Math.floor((ms / (1000 * 60)) % 60)
 
@@ -24,5 +24,5 @@ export function Timer({ startTime }: Props) {
     return () => clearInterval(intervalId)
   }, [startTime])
 
-  return <div className="text-5xl font-mono font-bold">{msToHMS(elapsed)}</div>
+  return <div className="text-5xl font-mono font-bold">{msToMS(elapsed)}</div>
 }

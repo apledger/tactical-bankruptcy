@@ -6,7 +6,7 @@ import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Button } from '../components/Button'
-import { msToHMS, Timer } from '../components/Timer'
+import { Timer } from '../components/Timer'
 import { TurnMarker } from '../components/TurnMarker'
 import { defaultState, reducer } from '../services/reducer'
 import {
@@ -19,6 +19,16 @@ import {
   getTotalPlayerTime,
 } from '../services/selectors'
 import { useHistoryReducer } from '../services/useHistoryReducer'
+
+function msToHMS(ms: number): string {
+  const seconds = Math.floor((ms / 1000) % 60)
+  const minutes = Math.floor((ms / (1000 * 60)) % 60)
+  const hours = Math.floor((ms / (1000 * 60 * 60)) % 24)
+
+  return `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${
+    seconds < 10 ? `0${seconds}` : seconds
+  }`
+}
 
 export default function Home() {
   const [{ present: state, past, future }, dispatch] = useHistoryReducer(reducer, defaultState)
