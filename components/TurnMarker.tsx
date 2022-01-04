@@ -16,10 +16,10 @@ export function TurnMarker({ color, isActive, isPassed }: Props) {
       className={cn(
         'h-8 w-8 rounded-full relative flex items-center justify-center',
         {
-          gray: 'bg-gray',
+          lightGray: 'bg-lightGray',
           red: 'bg-red',
           blue: 'bg-blue',
-          black: 'bg-black',
+          darkGray: 'bg-darkGray',
           yellow: 'bg-yellow',
           green: 'bg-green',
         }[color],

@@ -93,7 +93,7 @@ export const defaultPlayers: Player[] = [
   },
   {
     name: 'Brian',
-    color: 'black',
+    color: 'darkGray',
     isAlien: false,
   },
   {

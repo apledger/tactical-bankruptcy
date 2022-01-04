@@ -1,4 +1,4 @@
-export type Color = 'gray' | 'red' | 'blue' | 'black' | 'yellow' | 'green'
+export type Color = 'lightGray' | 'red' | 'blue' | 'darkGray' | 'yellow' | 'green'
 
 export type Turn = {
   roundIndex: number
