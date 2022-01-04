@@ -4,7 +4,7 @@ type Props = {
   startTime: number
 }
 
-function msToHMS(ms: number): string {
+export function msToHMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60),
     minutes = Math.floor((ms / (1000 * 60)) % 60)
 
