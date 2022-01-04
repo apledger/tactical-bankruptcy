@@ -24,5 +24,11 @@ export function Timer({ startTime }: Props) {
     return () => clearInterval(intervalId)
   }, [startTime])
 
+  useEffect(() => {
+    if (elapsed > 10 * 1000) {
+      const audo = new Audio('./public/Brass.mp3')
+    }
+  }, [elapsed])
+
   return <div className="text-5xl font-mono font-bold">{msToMS(elapsed)}</div>
 }

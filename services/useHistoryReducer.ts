@@ -22,6 +22,7 @@ export function useHistoryReducer<S, A extends Actions>(
 
     if (action.type === 'UNDO') {
       const [newPresent, ...past] = state.past
+
       return {
         past,
         present: newPresent,
@@ -30,6 +31,7 @@ export function useHistoryReducer<S, A extends Actions>(
     }
     if (action.type === 'REDO') {
       const [newPresent, ...future] = state.future
+
       return {
         past: [state.present, ...state.past],
         present: newPresent,
