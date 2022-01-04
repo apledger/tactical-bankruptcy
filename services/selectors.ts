@@ -13,7 +13,7 @@ export function getActiveRound(state: State): Round {
 }
 
 export function getActiveTurn(state: State): Turn {
-  return state.turns.filter(turn => turn.roundIndex === state.activeRoundIndex).at(-1)
+  return state.turns.filter(turn => turn.roundIndex === state.activeRoundIndex).slice(-1)[0]
 }
 
 export function getNextRound(state: State): Round {
