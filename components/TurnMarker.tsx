@@ -25,7 +25,7 @@ export function TurnMarker({ color, isActive, isPassed }: Props) {
         }[color],
       )}
     >
-      {isPassed && <FontAwesomeIcon className="fill-current text-black" icon={faTimes} />}
+      {isPassed && <FontAwesomeIcon className="fill-current text-white" icon={faTimes} />}
       {isActive && (
         <FontAwesomeIcon
           className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1/2 fill-current text-white"

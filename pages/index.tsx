@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import { useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import cn from 'classnames'
-import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons'
+import { faUndo, faRedo, faPlay, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Button } from '../components/Button'
@@ -19,6 +19,7 @@ import {
   getTotalPlayerTime,
 } from '../services/selectors'
 import { useHistoryReducer } from '../services/useHistoryReducer'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 function msToHMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60)
@@ -38,6 +39,37 @@ export default function Home() {
   const nextRound = getNextRound(state)
   const activeTurn = getActiveTurn(state)
   const hasActivePlayerPassed = getHasActivePlayerPassed(state)
+
+  useHotkeys('cmd+z, ctrl+z', () => dispatch({ type: 'UNDO' }), [dispatch])
+  useHotkeys('cmd+shift+z, ctrl+shift+z, cmd+y, ctrl+y', () => dispatch({ type: 'REDO' }), [
+    dispatch,
+  ])
+  useHotkeys(
+    'space',
+    () => {
+      if (activeTurn) {
+        dispatch({
+          type: 'END_PLAYER_TURN',
+          data: { type: hasActivePlayerPassed ? 'reaction' : 'action' },
+        })
+      } else {
+        dispatch({ type: 'START_ROUND' })
+      }
+    },
+    [dispatch, hasActivePlayerPassed, activeTurn],
+  )
+  useHotkeys(
+    'enter, esc',
+    () => {
+      if (activeTurn) {
+        dispatch({
+          type: 'END_PLAYER_TURN',
+          data: { type: 'pass' },
+        })
+      }
+    },
+    [dispatch, hasActivePlayerPassed, activeTurn],
+  )
 
   return (
     <div className="h-screen flex flex-col">
@@ -98,7 +130,7 @@ export default function Home() {
             )}
           </div>
 
-          <div className="flex-1 p-4 flex flex-col items-center gap-4 max-w-lg w-full mx-auto">
+          <div className="flex-1 p-4 flex flex-col items-center justify-center gap-4 max-w-lg w-full mx-auto">
             {activeTurn ? (
               <>
                 <p className="text-xl mb-2">{activePlayer.name}, you're up</p>
@@ -111,6 +143,16 @@ export default function Home() {
             {activeRound.startTime ? (
               <>
                 <Button
+                  className="h-20 gap-2 bg-orange-500"
+                  onClick={() => {
+                    dispatch({ type: 'END_PLAYER_TURN', data: { type: 'pass' } })
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTimes} size="lg" className="fill-current" />
+                  Pass
+                </Button>
+                <Button
+                  className="h-32 gap-2"
                   onClick={() => {
                     dispatch({
                       type: 'END_PLAYER_TURN',
@@ -118,14 +160,8 @@ export default function Home() {
                     })
                   }}
                 >
+                  <FontAwesomeIcon icon={faPlay} className="fill-current" />
                   Done
-                </Button>
-                <Button
-                  onClick={() => {
-                    dispatch({ type: 'END_PLAYER_TURN', data: { type: 'pass' } })
-                  }}
-                >
-                  Pass
                 </Button>
               </>
             ) : (
