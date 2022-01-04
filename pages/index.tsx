@@ -22,7 +22,7 @@ export const colors: Color[] = ['gray', 'red', 'blue', 'black', 'yellow', 'green
 
 export default function Home() {
   const [state, dispatch] = useReducer(reducer, defaultState)
-  const { players, activeRoundIndex } = state
+  const { players, activeRoundIndex, activePlayerIndex } = state
   const activePlayer = getActivePlayer(state)
   const activeRound = getActiveRound(state)
   const nextRound = getNextRound(state)
@@ -32,18 +32,35 @@ export default function Home() {
   return (
     <>
       <div className="h-screen flex flex-col">
-        <div className="h-24 bg-black flex items-center p-4 text-lg font-display text-white justify-center uppercase">
-          <FontAwesomeIcon className="fill-current text-white mr-3" icon={faCoins} size="lg" />
-          Tactical Bankruptcy
+        <div className="h-24 bg-black flex flex-col items-center p-4 gap-2">
+          <div className="text-sm font-display text-white justify-center uppercase">
+            Round {activeRoundIndex + 1}
+          </div>
+          <div
+            className={cn(
+              'grid gap-2',
+              {
+                2: 'grid-cols-2',
+                3: 'grid-cols-3',
+                4: 'grid-cols-4',
+                5: 'grid-cols-5',
+                6: 'grid-cols-6',
+              }[players.length],
+            )}
+          >
+            {activeRound.playerOrder.map(color => (
+              <TurnMarker key={color} color={color} isActive={false} />
+            ))}
+          </div>
         </div>
         <div className="flex-1 p-4 flex flex-col items-center gap-4">
           {activeTurn ? (
             <>
-              <p className="text-xl mb-2">{activePlayer.name}, you're up</p>
+              <p className="text-xl mb-2">{activePlayer.color}, you're up</p>
               <Timer startTime={activeTurn.startTime} />
             </>
           ) : (
-            <p className="text-xl mb-2">{activePlayer.name}, are you ready?</p>
+            <p className="text-xl mb-2">{activePlayer.color}, are you ready?</p>
           )}
 
           {activeRound.startTime ? (
@@ -63,7 +80,7 @@ export default function Home() {
                   dispatch({ type: 'END_PLAYER_TURN', data: { type: 'pass' } })
                 }}
               >
-                Passed
+                Pass
               </Button>
             </>
           ) : (

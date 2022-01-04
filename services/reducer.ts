@@ -1,3 +1,13 @@
+import {
+  getActivePlayer,
+  getActivePlayerTurns,
+  getActiveRound,
+  getActiveTurn,
+  getHasActivePlayerPassed,
+  getNextPlayer,
+  getNextPlayerIndex,
+  getNextRound,
+} from './selectors'
 import { Player, Round, Turn } from './types'
 
 export type State = {
@@ -14,75 +24,91 @@ export type Actions =
   | { type: 'END_PLAYER_TURN'; data: { type: Turn['type'] } }
 
 export const reducer = (state: State, action: Actions): State => {
-  const currentPlayer = state.players[state.activePlayerIndex]
-  const currentRound = state.rounds[state.activeRoundIndex]
-  const currentTurn = state.turns.at(-1)
-
   switch (action.type) {
     case 'START_ROUND':
+      const activeRound = getActiveRound(state)
+
       return {
         ...state,
         rounds: [
           ...state.rounds.slice(0, -1),
-          { ...currentRound, startTime: Date.now() },
+          { ...activeRound, startTime: Date.now() },
           {
-            startTime: Date.now(),
+            startTime: null,
             playerOrder: [],
           },
         ],
         turns: [
+          ...state.turns,
           {
             startTime: Date.now(),
             roundIndex: state.activeRoundIndex,
-            playerColor: currentRound.playerOrder[0],
+            playerColor: activeRound.playerOrder[0],
           },
         ],
       }
     case 'END_PLAYER_TURN':
-      const currentRoundPlayerTurns = state.turns.filter(
-        turn =>
-          turn.roundIndex === state.activeRoundIndex && turn.playerColor === currentPlayer.color,
-      )
-      const nextPlayerIndex = (state.activePlayerIndex + 1) % state.players.length
+      const activeTurn = getActiveTurn(state)
+      const activePlayer = getActivePlayer(state)
+      const hasActivePlayerPassed = getHasActivePlayerPassed(state)
+      const nextRound = getNextRound(state)
+      const nextPlayerIndex = getNextPlayerIndex(state)
+      const nextPlayer = getNextPlayer(state)
+      const isFirstTimePassing = !hasActivePlayerPassed && action.data.type === 'pass'
+      const isLastPassForRound =
+        isFirstTimePassing && nextRound.playerOrder.length === state.players.length - 1
 
       return {
         ...state,
-        activePlayerIndex: nextPlayerIndex,
         turns: [
           ...state.turns.slice(0, -1),
-          { ...currentTurn, endTime: Date.now(), type: action.data.type },
-          {
-            playerColor: state.players[nextPlayerIndex].color,
-            startTime: Date.now(),
-            roundIndex: state.activeRoundIndex,
-          },
+          { ...activeTurn, endTime: Date.now(), type: action.data.type },
+          ...(isLastPassForRound
+            ? []
+            : [
+                {
+                  startTime: Date.now(),
+                  roundIndex: state.activeRoundIndex,
+                  playerColor: nextPlayer.color,
+                },
+              ]),
         ],
+        rounds: isFirstTimePassing
+          ? [
+              ...state.rounds.slice(0, -1),
+              { ...nextRound, playerOrder: [...nextRound.playerOrder, activePlayer.color] },
+            ]
+          : state.rounds,
+        activeRoundIndex: isLastPassForRound ? state.activeRoundIndex + 1 : state.activeRoundIndex,
+        activePlayerIndex: isLastPassForRound ? 0 : nextPlayerIndex,
       }
   }
 
   return state
 }
 
+export const defaultPlayers: Player[] = [
+  {
+    name: 'Sean',
+    color: 'gray',
+    isAlien: false,
+  },
+  {
+    name: 'Ryan',
+    color: 'red',
+    isAlien: false,
+  },
+  {
+    name: 'Alan',
+    color: 'blue',
+    isAlien: false,
+  },
+]
+
 export const defaultState: State = {
   turns: [],
-  rounds: [{ startTime: null, playerOrder: [] }],
-  players: [
-    {
-      name: 'Sean',
-      color: 'gray',
-      isAlien: false,
-    },
-    {
-      name: 'Ryan',
-      color: 'red',
-      isAlien: false,
-    },
-    {
-      name: 'Alan',
-      color: 'blue',
-      isAlien: false,
-    },
-  ],
+  rounds: [{ startTime: null, playerOrder: defaultPlayers.map(player => player.color) }],
+  players: defaultPlayers,
   activeRoundIndex: 0,
   activePlayerIndex: 0,
 }

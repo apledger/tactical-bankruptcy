@@ -2,7 +2,10 @@ import { type State } from './reducer'
 import { Player, Round, Turn } from './types'
 
 export function getActivePlayer(state: State): Player {
-  return state.players[state.activePlayerIndex]
+  const activeRound = getActiveRound(state)
+  const activeColor = activeRound.playerOrder[state.activePlayerIndex]
+
+  return state.players.find(player => player.color === activeColor)
 }
 
 export function getActiveRound(state: State): Round {
@@ -10,7 +13,7 @@ export function getActiveRound(state: State): Round {
 }
 
 export function getActiveTurn(state: State): Turn {
-  return state.turns.at(-1)
+  return state.turns.filter(turn => turn.roundIndex === state.activeRoundIndex).at(-1)
 }
 
 export function getNextRound(state: State): Round {
@@ -25,5 +28,27 @@ export function getHasActivePlayerPassed(state: State): boolean {
       turn.playerColor === activePlayer.color &&
       turn.roundIndex === state.activeRoundIndex &&
       turn.type === 'pass',
+  )
+}
+
+export function getNextPlayerIndex(state: State): number {
+  return (state.activePlayerIndex + 1) % state.players.length
+}
+
+export function getNextPlayer(state: State): Player {
+  const nextPlayerIndex = getNextPlayerIndex(state)
+  const activeRound = getActiveRound(state)
+  const activeColor = activeRound.playerOrder[nextPlayerIndex]
+
+  return state.players.find(player => player.color === activeColor)
+}
+
+export function getActivePlayerTurns(state: State, roundIndex?: number) {
+  const activePlayer = getActivePlayer(state)
+
+  return state.turns.filter(
+    turn =>
+      turn.roundIndex === (roundIndex ?? state.activeRoundIndex) &&
+      turn.playerColor === activePlayer.color,
   )
 }
