@@ -18,3 +18,10 @@ export type Player = {
   color: Color
   isAlien: boolean
 }
+
+export type Actions =
+  | { type: 'UNDO' }
+  | { type: 'REDO' }
+  | { type: 'START_ROUND' }
+  | { type: 'END_PLAYER_TURN'; data: { type: Turn['type'] } }
+  | { type: 'BACK' }

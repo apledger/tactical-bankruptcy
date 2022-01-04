@@ -8,6 +8,7 @@ import {
   getNextRound,
 } from './selectors'
 import { Player, Round, Turn } from './types'
+import { Actions } from './types'
 
 export type State = {
   turns: Turn[]
@@ -17,14 +18,9 @@ export type State = {
   activePlayerIndex: number
 }
 
-export type Actions =
-  | { type: 'START_ROUND' }
-  | { type: 'START_PLAYER_TURN' }
-  | { type: 'END_PLAYER_TURN'; data: { type: Turn['type'] } }
-
-export const reducer = (state: State, action: Actions): State => {
+export function reducer<S extends State, A extends Actions>(state: S, action: A): State {
   switch (action.type) {
-    case 'START_ROUND':
+    case 'START_ROUND': {
       const activeRound = getActiveRound(state)
 
       return {
@@ -46,7 +42,9 @@ export const reducer = (state: State, action: Actions): State => {
           },
         ],
       }
-    case 'END_PLAYER_TURN':
+    }
+
+    case 'END_PLAYER_TURN': {
       const activeTurn = getActiveTurn(state)
       const activePlayer = getActivePlayer(state)
       const hasActivePlayerPassed = getHasActivePlayerPassed(state)
@@ -81,6 +79,7 @@ export const reducer = (state: State, action: Actions): State => {
         activeRoundIndex: isLastPassForRound ? state.activeRoundIndex + 1 : state.activeRoundIndex,
         activePlayerIndex: isLastPassForRound ? 0 : nextPlayerIndex,
       }
+    }
   }
 
   return state
