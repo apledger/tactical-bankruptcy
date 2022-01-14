@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef } from 'react'
 
 import { Player } from '../services/types'
-import SvgDraco from '../Draco'
+import SvgDraco from '../lib/icons/Draco'
 import SvgEridani from '../lib/icons/Eridani'
 import SvgHydrani from '../lib/icons/Hydrani'
 import SvgMech from '../lib/icons/Mech'

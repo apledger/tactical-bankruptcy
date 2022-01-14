@@ -87,24 +87,24 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
 
 export const defaultPlayers: Player[] = [
   {
-    name: 'Ryan',
-    color: 'yellow',
-    isAlien: false,
-  },
-  {
-    name: 'Brian',
-    color: 'darkGray',
-    isAlien: false,
-  },
-  {
     name: 'Sean',
     color: 'blue',
     isAlien: true,
   },
   {
-    name: 'Alan',
-    color: 'red',
+    name: 'Dan',
+    color: 'lightGray',
     isAlien: true,
+  },
+  {
+    name: 'Alan',
+    color: 'yellow',
+    isAlien: true,
+  },
+  {
+    name: 'Brad',
+    color: 'red',
+    isAlien: false,
   },
 ]
 
