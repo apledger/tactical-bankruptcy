@@ -17,9 +17,11 @@ import {
   getHasActivePlayerPassed,
   getHasPlayerPassed,
   getTotalPlayerTime,
+  getPlayer,
 } from '../services/selectors'
 import { useHistoryReducer } from '../services/useHistoryReducer'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { PlayerBadge } from '../components/PlayerBadge'
 
 function msToHMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60)
@@ -93,27 +95,6 @@ export default function Home() {
               <div className="text-sm font-display text-white justify-center uppercase">
                 Round {activeRoundIndex + 1}
               </div>
-              <div
-                className={cn(
-                  'grid gap-2',
-                  {
-                    2: 'grid-cols-2',
-                    3: 'grid-cols-3',
-                    4: 'grid-cols-4',
-                    5: 'grid-cols-5',
-                    6: 'grid-cols-6',
-                  }[players.length],
-                )}
-              >
-                {activeRound.playerOrder.map((color, index) => (
-                  <TurnMarker
-                    key={color}
-                    color={color}
-                    isActive={index === activePlayerIndex}
-                    isPassed={getHasPlayerPassed(state, color)}
-                  />
-                ))}
-              </div>
             </div>
             {future.length > 0 && (
               <div className="absolute right-0 mr-4">
@@ -131,6 +112,28 @@ export default function Home() {
           </div>
 
           <div className="flex-1 p-4 flex flex-col items-center justify-center gap-4 max-w-lg w-full mx-auto">
+            <div
+              className={cn(
+                'flex gap-2 items-center justify-center',
+                {
+                  2: 'grid-cols-2',
+                  3: 'grid-cols-3',
+                  4: 'grid-cols-4',
+                  5: 'grid-cols-5',
+                  6: 'grid-cols-6',
+                }[players.length],
+              )}
+            >
+              {activeRound.playerOrder.map((color, index) => (
+                <PlayerBadge
+                  key={color}
+                  player={getPlayer(state, color)}
+                  size={index === activePlayerIndex ? 'medium' : 'small'}
+                  isActive={index === activePlayerIndex}
+                  isPassed={getHasPlayerPassed(state, color)}
+                />
+              ))}
+            </div>
             {activeTurn ? (
               <>
                 <p className="text-xl mb-2">{activePlayer.name}, you're up</p>

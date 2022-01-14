@@ -1,6 +1,10 @@
 import { type State } from './reducer'
 import { Player, Round, Turn, Color } from './types'
 
+export function getPlayer(state: State, color: Color): Player {
+  return state.players.find(player => player.color === color)
+}
+
 export function getActivePlayer(state: State): Player {
   const activeRound = getActiveRound(state)
   const activeColor = activeRound.playerOrder[state.activePlayerIndex]
