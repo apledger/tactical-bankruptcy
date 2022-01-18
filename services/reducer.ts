@@ -7,8 +7,9 @@ import {
   getNextPlayerIndex,
   getNextRound,
 } from './selectors'
-import { Player, Round, Turn } from './types'
-import { Actions } from './types'
+import { Player, Round, Turn, Actions } from './types'
+
+import { players } from './players'
 
 export type State = {
   turns: Turn[]
@@ -38,7 +39,7 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
           {
             startTime: Date.now(),
             roundIndex: state.activeRoundIndex,
-            playerColor: activeRound.playerOrder[0],
+            playerId: activeRound.playerOrder[0],
           },
         ],
       }
@@ -66,14 +67,14 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
                 {
                   startTime: Date.now(),
                   roundIndex: state.activeRoundIndex,
-                  playerColor: nextPlayer.color,
+                  playerId: nextPlayer.id,
                 },
               ]),
         ],
         rounds: isFirstTimePassing
           ? [
               ...state.rounds.slice(0, -1),
-              { ...nextRound, playerOrder: [...nextRound.playerOrder, activePlayer.color] },
+              { ...nextRound, playerOrder: [...nextRound.playerOrder, activePlayer.id] },
             ]
           : state.rounds,
         activeRoundIndex: isLastPassForRound ? state.activeRoundIndex + 1 : state.activeRoundIndex,
@@ -85,33 +86,10 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
   return state
 }
 
-export const defaultPlayers: Player[] = [
-  {
-    name: 'Sean',
-    color: 'blue',
-    isAlien: true,
-  },
-  {
-    name: 'Dan',
-    color: 'lightGray',
-    isAlien: true,
-  },
-  {
-    name: 'Alan',
-    color: 'yellow',
-    isAlien: true,
-  },
-  {
-    name: 'Brad',
-    color: 'red',
-    isAlien: false,
-  },
-]
-
 export const defaultState: State = {
   turns: [],
-  rounds: [{ startTime: null, playerOrder: defaultPlayers.map(player => player.color) }],
-  players: defaultPlayers,
+  rounds: [{ startTime: null, playerOrder: players.map(player => player.id) }],
+  players,
   activeRoundIndex: 0,
   activePlayerIndex: 0,
 }

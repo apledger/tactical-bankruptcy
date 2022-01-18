@@ -1,15 +1,15 @@
 import { type State } from './reducer'
 import { Player, Round, Turn, Color } from './types'
 
-export function getPlayer(state: State, color: Color): Player {
-  return state.players.find(player => player.color === color)
+export function getPlayer(state: State, id: string): Player {
+  return state.players.find(player => player.id === id)
 }
 
 export function getActivePlayer(state: State): Player {
   const activeRound = getActiveRound(state)
-  const activeColor = activeRound.playerOrder[state.activePlayerIndex]
+  const activePlayerId = activeRound.playerOrder[state.activePlayerIndex]
 
-  return state.players.find(player => player.color === activeColor)
+  return state.players.find(player => player.id === activePlayerId)
 }
 
 export function getActiveRound(state: State): Round {
@@ -24,19 +24,17 @@ export function getNextRound(state: State): Round {
   return state.rounds[state.activeRoundIndex + 1]
 }
 
-export function getHasPlayerPassed(state: State, color: Color): boolean {
+export function getHasPlayerPassed(state: State, id: string): boolean {
   return state.turns.some(
     turn =>
-      turn.playerColor === color &&
-      turn.roundIndex === state.activeRoundIndex &&
-      turn.type === 'pass',
+      turn.playerId === id && turn.roundIndex === state.activeRoundIndex && turn.type === 'pass',
   )
 }
 
 export function getHasActivePlayerPassed(state: State): boolean {
   const activePlayer = getActivePlayer(state)
 
-  return getHasPlayerPassed(state, activePlayer.color)
+  return getHasPlayerPassed(state, activePlayer.id)
 }
 
 export function getNextPlayerIndex(state: State): number {
@@ -46,19 +44,19 @@ export function getNextPlayerIndex(state: State): number {
 export function getNextPlayer(state: State): Player {
   const nextPlayerIndex = getNextPlayerIndex(state)
   const activeRound = getActiveRound(state)
-  const activeColor = activeRound.playerOrder[nextPlayerIndex]
+  const activePlayerId = activeRound.playerOrder[nextPlayerIndex]
 
-  return state.players.find(player => player.color === activeColor)
+  return state.players.find(player => player.id === activePlayerId)
 }
 
-export function getPlayerTurns(state: State, color: Color) {
-  const player = state.players.find(player => player.color === color)
+export function getPlayerTurns(state: State, id: string) {
+  const player = state.players.find(player => player.id === id)
 
-  return state.turns.filter(turn => turn.playerColor === player.color)
+  return state.turns.filter(turn => turn.playerId === player.id)
 }
 
-export function getTotalPlayerTime(state: State, color: Color): number {
-  const playerTurns = getPlayerTurns(state, color)
+export function getTotalPlayerTime(state: State, id: string): number {
+  const playerTurns = getPlayerTurns(state, id)
 
   return playerTurns.map(turn => turn.endTime - turn.startTime).reduce((a, b) => a + b)
 }

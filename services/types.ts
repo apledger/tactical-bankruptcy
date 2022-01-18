@@ -2,7 +2,7 @@ export type Color = 'lightGray' | 'red' | 'blue' | 'darkGray' | 'yellow' | 'gree
 
 export type Turn = {
   roundIndex: number
-  playerColor: Color
+  playerId: Color
   startTime: number
   endTime?: number
   type?: 'action' | 'reaction' | 'pass'
@@ -10,13 +10,13 @@ export type Turn = {
 
 export type Round = {
   startTime: number | null
-  playerOrder: Color[]
+  playerOrder: string[]
 }
 
 export type Player = {
+  id: string
+  factionId: string
   name: string
-  color: Color
-  isAlien: boolean
 }
 
 export type Actions =
@@ -25,3 +25,10 @@ export type Actions =
   | { type: 'START_ROUND' }
   | { type: 'END_PLAYER_TURN'; data: { type: Turn['type'] } }
   | { type: 'BACK' }
+
+export type Faction = {
+  id: string
+  name: string
+  color: string
+  icon: string
+}

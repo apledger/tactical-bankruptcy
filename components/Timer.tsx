@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react'
+import classNames from 'classnames'
+import { ComponentPropsWithoutRef, useEffect, useState } from 'react'
 
-type Props = {
+type BaseProps = {
   startTime: number
 }
+
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 function msToMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60),
@@ -11,7 +14,7 @@ function msToMS(ms: number): string {
   return `${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
 }
 
-export function Timer({ startTime }: Props) {
+export function Timer({ startTime, className, ...rest }: Props) {
   const [elapsed, setElapsed] = useState(0)
 
   useEffect(() => {
@@ -30,5 +33,9 @@ export function Timer({ startTime }: Props) {
     }
   }, [elapsed])
 
-  return <div className="text-5xl font-mono font-bold">{msToMS(elapsed)}</div>
+  return (
+    <div {...rest} className={classNames('text-xl', className)}>
+      {msToMS(elapsed)}
+    </div>
+  )
 }

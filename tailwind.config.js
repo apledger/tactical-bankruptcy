@@ -3,9 +3,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Oxygen', 'sans-serif'],
-        mono: ['Oxygen Mono', 'monospace'],
-        display: ['Unica One', 'display'],
+        sans: ['Unica One', 'sans-serif'],
       },
       colors: {
         blue: '#477B9F',

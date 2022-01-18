@@ -32,7 +32,7 @@ export const Button = forwardRef(function Button(
       {...rest}
       className={cn(
         `w-36 cursor-click relative rounded-md flex items-center justify-center focus:outline-none
-      disabled:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed
+      disabled:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed uppercase
       drop-shadow hover:drop-shadow-md
       p-4 bg-indigo-500 text-white
       disabled:hover:bg-gray-200 disabled:hover:text-gray-600 fill-current font-bold`,
