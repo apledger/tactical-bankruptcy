@@ -74,8 +74,6 @@ export default function Home() {
     [dispatch, hasActivePlayerPassed, activeTurn],
   )
 
-  console.log({ state })
-
   return (
     <div className="h-screen flex flex-col">
       {activeRoundIndex < 8 ? (
