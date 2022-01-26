@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { config } from '@fortawesome/fontawesome-svg-core'
+import { GameContextProvider } from '../services/useGameContext'
 
 config.autoAddCss = false
 
@@ -16,8 +17,10 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <Main />
-          <NextScript />
+          <GameContextProvider>
+            <Main />
+            <NextScript />
+          </GameContextProvider>
         </body>
       </Html>
     )

@@ -89,7 +89,7 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
 export const defaultState: State = {
   turns: [],
   rounds: [{ startTime: null, playerOrder: players.map(player => player.id) }],
-  players,
+  players: [],
   activeRoundIndex: 0,
   activePlayerIndex: 0,
 }
