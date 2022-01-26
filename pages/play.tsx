@@ -160,7 +160,7 @@ export default function Home() {
               </>
             )}
           </div>
-          <div className="h-24 bg-black flex flex-col items-center p-4 gap-2">
+          <div className="h-32 bg-black flex flex-col items-center p-4 gap-2">
             <div className="text-sm font-display text-white justify-center uppercase">
               Next Round
             </div>

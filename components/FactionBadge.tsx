@@ -7,11 +7,18 @@ import { factions } from '../services/factions'
 type BaseProps = {
   factionId: string
   size?: 'small' | 'medium' | 'large'
+  iconOpacity?: number
 }
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
 
-export function FactionBadge({ factionId, size = 'medium', className, ...rest }: Props) {
+export function FactionBadge({
+  factionId,
+  size = 'medium',
+  className,
+  iconOpacity = 1,
+  ...rest
+}: Props) {
   const faction = factions.find(faction => faction.id === factionId)
 
   return faction ? (
@@ -24,7 +31,10 @@ export function FactionBadge({ factionId, size = 'medium', className, ...rest }:
         backgroundColor: faction.color,
       }}
     >
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all inline-flex">
+      <div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all inline-flex"
+        style={{ opacity: iconOpacity }}
+      >
         <Image
           alt={`${faction.name} icon`}
           src={faction.icon}

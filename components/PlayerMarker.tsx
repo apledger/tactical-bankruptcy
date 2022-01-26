@@ -27,11 +27,18 @@ export function PlayerMarker({ player, startTime, isPassed, isActive, ...rest }:
           </div>
         )}
       </div>
-      <FactionBadge factionId={player.factionId} size={isActive ? 'large' : 'medium'} />
+      <FactionBadge
+        iconOpacity={isPassed ? 0.5 : 1}
+        factionId={player.factionId}
+        size={isActive ? 'large' : 'medium'}
+      />
       {isPassed && (
         <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -rotate-12
-        w-24 h-10 text-sm text-white caps bg-black flex items-center justify-center uppercase"
+          className={classNames(
+            `absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -rotate-12
+          text-white caps bg-black flex items-center justify-center uppercase transition-all border border-white`,
+            isActive ? 'w-48 h-12 text-md' : 'w-24 h-10 text-sm',
+          )}
         >
           Passed
         </div>
