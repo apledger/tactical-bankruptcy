@@ -9,13 +9,13 @@ type BaseProps = {
   size?: 'small' | 'medium' | 'large'
 }
 
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
 
 export function FactionBadge({ factionId, size = 'medium', className, ...rest }: Props) {
   const faction = factions.find(faction => faction.id === factionId)
 
   return faction ? (
-    <div
+    <button
       {...rest}
       className={classNames('relative rounded-full transition-all', className)}
       style={{
@@ -24,7 +24,7 @@ export function FactionBadge({ factionId, size = 'medium', className, ...rest }:
         backgroundColor: faction.color,
       }}
     >
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all inline-flex">
         <Image
           alt={`${faction.name} icon`}
           src={faction.icon}
@@ -32,7 +32,7 @@ export function FactionBadge({ factionId, size = 'medium', className, ...rest }:
           height={{ small: 30, medium: 60, large: 150 }[size]}
         />
       </div>
-    </div>
+    </button>
   ) : (
     <div>Not Found</div>
   )

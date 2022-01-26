@@ -21,6 +21,8 @@ export function useHistoryReducer<S, A extends Actions>(
     const newPresent = reducer(state.present, action)
 
     if (action.type === 'UNDO') {
+      if (state.past.length === 0) return state
+
       const [newPresent, ...past] = state.past
 
       return {
@@ -30,6 +32,8 @@ export function useHistoryReducer<S, A extends Actions>(
       }
     }
     if (action.type === 'REDO') {
+      if (state.future.length === 0) return state
+
       const [newPresent, ...future] = state.future
 
       return {

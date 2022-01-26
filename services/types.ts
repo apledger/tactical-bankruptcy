@@ -24,7 +24,7 @@ export type Actions =
   | { type: 'REDO' }
   | { type: 'START_ROUND' }
   | { type: 'END_PLAYER_TURN'; data: { type: Turn['type'] } }
-  | { type: 'BACK' }
+  | { type: 'ADD_PLAYER'; data: { factionId: string; name: string } }
 
 export type Faction = {
   id: string

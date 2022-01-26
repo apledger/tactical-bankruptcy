@@ -2,7 +2,7 @@
 
 import { useEffect, useReducer } from 'react'
 import cn from 'classnames'
-import router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { faUndo, faRedo, faPlay, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -37,16 +37,13 @@ function msToHMS(ms: number): string {
 }
 
 export default function Home() {
-  const { state, dispatch } = useGameContext()
+  const router = useRouter()
+  const { state } = useGameContext()
 
   useEffect(() => {
-    console.log(state.players.length)
     if (state.players.length === 0) router.push('/setup')
-    else {
-      console.log('here')
-      router.push('/play')
-    }
-  }, [state])
+    else router.push('/play')
+  }, [state, router])
 
   return <div>Home!</div>
 }

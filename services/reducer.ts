@@ -10,6 +10,7 @@ import {
 import { Player, Round, Turn, Actions } from './types'
 
 import { players } from './players'
+import { v4 } from 'uuid'
 
 export type State = {
   turns: Turn[]
@@ -81,6 +82,16 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
         activePlayerIndex: isLastPassForRound ? 0 : nextPlayerIndex,
       }
     }
+
+    case 'ADD_PLAYER': {
+      const currentRound = getActiveRound(state)
+      const player = { id: v4(), ...action.data }
+      return {
+        ...state,
+        players: [...state.players, player],
+        rounds: [{ ...currentRound, playerOrder: [player.id, ...currentRound.playerOrder] }],
+      }
+    }
   }
 
   return state
@@ -88,7 +99,7 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
 
 export const defaultState: State = {
   turns: [],
-  rounds: [{ startTime: null, playerOrder: players.map(player => player.id) }],
+  rounds: [{ startTime: null, playerOrder: [] }],
   players: [],
   activeRoundIndex: 0,
   activePlayerIndex: 0,

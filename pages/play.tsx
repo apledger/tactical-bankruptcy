@@ -23,6 +23,8 @@ import { useHistoryReducer } from '../services/useHistoryReducer'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { PlayerMarker } from '../components/PlayerMarker'
 import { FactionBadge } from '../components/FactionBadge'
+import { useGameContext } from '../services/useGameContext'
+import { useRouter } from 'next/router'
 
 function msToHMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60)
@@ -35,13 +37,20 @@ function msToHMS(ms: number): string {
 }
 
 export default function Home() {
-  const [{ present: state, past, future }, dispatch] = useHistoryReducer(reducer, defaultState)
+  const router = useRouter()
+  const { state, dispatch, canUndo, canRedo } = useGameContext()
   const { players, activeRoundIndex, activePlayerIndex } = state
   const activePlayer = getActivePlayer(state)
   const activeRound = getActiveRound(state)
   const nextRound = getNextRound(state)
   const activeTurn = getActiveTurn(state)
   const hasActivePlayerPassed = getHasActivePlayerPassed(state)
+
+  console.log({ players: state.players })
+
+  useEffect(() => {
+    if (state.players.length === 0) router.push('/setup')
+  }, [state, router])
 
   useHotkeys('cmd+z, ctrl+z', () => dispatch({ type: 'UNDO' }), [dispatch])
   useHotkeys('cmd+shift+z, ctrl+shift+z, cmd+y, ctrl+y', () => dispatch({ type: 'REDO' }), [
@@ -79,7 +88,7 @@ export default function Home() {
       {activeRoundIndex < 8 ? (
         <>
           <div className="h-24 bg-black flex items-center relative">
-            {past.length > 0 && (
+            {canUndo && (
               <div className="absolute left-0 ml-4">
                 <div
                   className="cursor-pointer bg-white rounded p-2 text-xs flex items-center gap-1"
@@ -97,7 +106,7 @@ export default function Home() {
                 Round {activeRoundIndex + 1}
               </div>
             </div>
-            {future.length > 0 && (
+            {canRedo && (
               <div className="absolute right-0 mr-4">
                 <div
                   className="cursor-pointer bg-white rounded p-2 text-xs flex items-center gap-1"
