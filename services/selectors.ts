@@ -23,8 +23,6 @@ export function getActiveRound(state: State): Round {
 }
 
 export function getActiveTurn(state: State): Turn | null {
-  console.log({ turns: state.turns.filter(turn => turn.roundIndex === state.activeRoundIndex) })
-
   return (
     state.turns
       .filter(turn => turn.roundIndex === state.activeRoundIndex)
