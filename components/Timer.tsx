@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { ComponentPropsWithoutRef, useEffect, useState } from 'react'
+import { useTimer } from '../services/useTimer'
 
 type BaseProps = {
   startTime: number
@@ -15,17 +16,7 @@ export function msToMS(ms: number): string {
 }
 
 export function Timer({ startTime, className, ...rest }: Props) {
-  const [elapsed, setElapsed] = useState(0)
-
-  useEffect(() => {
-    setElapsed(Date.now() - startTime)
-
-    const intervalId = setInterval(() => {
-      setElapsed(Date.now() - startTime)
-    }, 1000)
-
-    return () => clearInterval(intervalId)
-  }, [startTime])
+  const { elapsed } = useTimer(startTime)
 
   return (
     <div {...rest} className={classNames('uppercase', className)}>

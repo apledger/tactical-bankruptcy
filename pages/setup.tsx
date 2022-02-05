@@ -39,7 +39,6 @@ export default function Setup() {
   } = useFormik({
     onSubmit: values => {
       const { name, factionId } = values
-      console.log('submit')
 
       if (name && factionId) {
         dispatch({ type: 'ADD_PLAYER', data: { name, factionId } })
