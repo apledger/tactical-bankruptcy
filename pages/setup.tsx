@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
+import { useRef } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import * as Yup from 'yup'
 
@@ -18,7 +19,7 @@ interface PlayerValues {
 }
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
+  name: Yup.string().max(50, 'Too Long!').required('Required'),
   factionId: Yup.string().required('Required'),
 })
 
@@ -38,6 +39,7 @@ export default function Setup() {
   } = useFormik({
     onSubmit: values => {
       const { name, factionId } = values
+      console.log('submit')
 
       if (name && factionId) {
         dispatch({ type: 'ADD_PLAYER', data: { name, factionId } })
@@ -47,6 +49,7 @@ export default function Setup() {
     initialValues,
     validationSchema,
   })
+  const nameInput = useRef<HTMLInputElement>(null)
 
   useHotkeys('cmd+z, ctrl+z', () => dispatch({ type: 'UNDO' }), [dispatch])
   useHotkeys('cmd+shift+z, ctrl+shift+z, cmd+y, ctrl+y', () => dispatch({ type: 'REDO' }), [
@@ -60,7 +63,12 @@ export default function Setup() {
       </div>
       <div className="flex-grow flex items-center">
         <form className="grid gap-10 max-w-5xl m-auto" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-6 gap-4">
+          <div className="grid grid-cols-6 gap-4 relative ">
+            {errors.factionId && touched.factionId && (
+              <div className="absolute bottom-full mb-4 text-lg text-red-500 uppercase justify-center w-full flex">
+                Please select a faction
+              </div>
+            )}
             {factions.map(faction => {
               const selectedFactionColors = players
                 .map(player => factions.find(faction => faction.id === player.factionId)?.color)
@@ -81,8 +89,10 @@ export default function Setup() {
                   )}
                   disabled={disabled}
                   factionId={faction.id}
-                  onClick={() => {
+                  onPointerDown={e => {
+                    e.preventDefault()
                     setFieldValue('factionId', faction.id)
+                    nameInput.current?.focus()
                   }}
                 />
               )
@@ -92,6 +102,7 @@ export default function Setup() {
             <div className="text-md uppercase text-gray-500">Name</div>
             <div className="flex gap-2 relative">
               <Input
+                ref={nameInput}
                 className="flex-grow"
                 value={name}
                 onChange={({ currentTarget }) => setFieldValue('name', currentTarget.value)}
@@ -99,12 +110,11 @@ export default function Setup() {
               <Button className="flex-shrink-0" color="black" type="submit">
                 Add Player
               </Button>
-              {(errors.name && touched.name) ||
-                (errors.factionId && touched.factionId && (
-                  <div className="absolute top-full mt-2 text-md text-red-500 uppercase">
-                    Faction and name are required
-                  </div>
-                ))}
+              {errors.name && touched.name && (
+                <div className="absolute top-full mt-2 text-md text-red-500 uppercase">
+                  Name is required
+                </div>
+              )}
             </div>
           </div>
         </form>
