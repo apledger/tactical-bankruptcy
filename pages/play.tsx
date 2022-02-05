@@ -33,6 +33,7 @@ export default function Home() {
 
   useEffect(() => {
     if (state.players.length === 0) router.push('/setup')
+    if (state.activeRoundIndex === 8) router.push('/score')
   }, [state, router])
 
   useHotkeys('cmd+z, ctrl+z', () => dispatch({ type: 'UNDO' }), [dispatch])
@@ -48,7 +49,11 @@ export default function Home() {
           data: { type: hasActivePlayerPassed ? 'reaction' : 'action' },
         })
       } else {
-        dispatch({ type: 'START_ROUND' })
+        if (activeRoundIndex === null || activeRoundIndex === 0) {
+          dispatch({ type: 'START_ROUND' })
+        } else {
+          router.push('/score')
+        }
       }
     },
     [dispatch, hasActivePlayerPassed, activeTurn],
@@ -155,7 +160,7 @@ export default function Home() {
             <>
               <StatBadge label="Ready to play?" />
             </>
-          ) : (
+          ) : activeRoundIndex < 7 ? (
             <>
               <StatBadge label={`Next Round: ${activeRoundIndex + 2}`} />
               <div className="flex gap-2">
@@ -163,6 +168,10 @@ export default function Home() {
                   <FactionBadge key={player.id} factionId={player.factionId} size="small" />
                 ))}
               </div>
+            </>
+          ) : (
+            <>
+              <StatBadge label={`Last Round`} />
             </>
           )}
         </div>
@@ -199,12 +208,20 @@ export default function Home() {
           ) : (
             <>
               <div className="text-white uppercase text-lg">
-                {activeRoundIndex === 0 ? 'Start Round' : 'Start Next Round'}
+                {activeRoundIndex == null
+                  ? 'Start Game'
+                  : activeRoundIndex < 7
+                  ? 'Start Next Round'
+                  : 'End Game'}
               </div>
               <Button
                 color="white"
                 onClick={() => {
-                  dispatch({ type: 'START_ROUND' })
+                  if (activeRoundIndex === null || activeRoundIndex === 0) {
+                    dispatch({ type: 'START_ROUND' })
+                  } else {
+                    router.push('/score')
+                  }
                 }}
               >
                 Space
