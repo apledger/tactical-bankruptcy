@@ -131,6 +131,24 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <div className="h-20 bg-white flex items-center justify-end p-4">
+        {activeTurn && (
+          <div className="flex gap-4 items-center">
+            <div className="text-black uppercase text-lg">Done</div>
+            <Button
+              className="w-20"
+              onClick={() => {
+                dispatch({
+                  type: 'END_PLAYER_TURN',
+                  data: { type: 'pass' },
+                })
+              }}
+            >
+              Space
+            </Button>
+          </div>
+        )}
+      </div>
       <div className="h-20 bg-black flex items-center justify-between p-4">
         <div className="flex gap-4">
           {activeRoundIndex === null ? (
