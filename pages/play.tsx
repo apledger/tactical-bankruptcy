@@ -130,7 +130,7 @@ export default function Home() {
               startTime={activeTurn && index === activePlayerIndex ? activeTurn.startTime : null}
               totalTime={getTotalPlayerTime(state, player.id)}
               isActive={activeTurn != null && index === activePlayerIndex}
-              isPassed={!isRoundDone && getHasPlayerPassed(state, player.id)}
+              isPassed={getHasPlayerPassed(state, player.id)}
               isHovered={isRoundDone}
             />
           ))}
