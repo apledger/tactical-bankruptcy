@@ -93,3 +93,9 @@ export function getOrderedPlayers(state: State, roundIndex?: number): Player[] {
 
   return round?.playerOrder.map(playerId => getPlayer(state, playerId)) ?? []
 }
+
+export function getActiveRoundTurns(state: State): Turn[] {
+  const activeRoundIndex = state.activeRoundIndex ?? 0
+
+  return state.turns.filter(turn => turn.roundIndex === activeRoundIndex)
+}

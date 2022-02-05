@@ -18,13 +18,13 @@ export function StatBadge({ className, label, color = 'gray', value }: Props) {
         { gray: 'bg-zinc-300 text-black', orange: 'bg-amber-600 text-white' }[color],
       )}
     >
-      {value ? (
+      {value != null ? (
         <>
           <div className="text-xs">{label}</div>
-          <div className="text-xl">{value}</div>
+          <div className="text-xl leading-none">{value}</div>
         </>
       ) : (
-        <div className="text-xl">{label}</div>
+        <div className="text-xl leading-none">{label}</div>
       )}
     </div>
   )

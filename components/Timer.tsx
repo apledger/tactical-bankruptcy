@@ -28,7 +28,7 @@ export function Timer({ startTime, className, ...rest }: Props) {
   }, [startTime])
 
   return (
-    <div {...rest} className={classNames('text-xl', className)}>
+    <div {...rest} className={classNames('uppercase', className)}>
       {msToMS(elapsed)}
     </div>
   )

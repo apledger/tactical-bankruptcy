@@ -13,6 +13,8 @@ import {
   getTotalPlayerTime,
   getOrderedPlayers,
   getIsActiveRoundDone,
+  getActiveRoundTurns,
+  getActiveRound,
 } from '../services/selectors'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { PlayerMarker } from '../components/PlayerMarker'
@@ -22,14 +24,17 @@ import { useRouter } from 'next/router'
 import { IconButton } from '../components/IconButton'
 import { StatBadge } from '../components/StatBadge'
 import { CombatStars } from '../components/CombatStars'
+import { msToMS, Timer } from '../components/Timer'
 
 export default function Home() {
   const router = useRouter()
   const { state, dispatch, canUndo, canRedo } = useGameContext()
   const { players, activeRoundIndex, activePlayerIndex } = state
   const activeTurn = getActiveTurn(state)
+  const activeRound = getActiveRound(state)
   const hasActivePlayerPassed = getHasActivePlayerPassed(state)
   const isRoundDone = getIsActiveRoundDone(state)
+  const roundTurns = getActiveRoundTurns(state)
 
   useEffect(() => {
     if (state.players.length === 0) router.push('/setup')
@@ -78,6 +83,13 @@ export default function Home() {
       <div className="h-20 p-4 flex items-center justify-between">
         <div className="flex gap-2">
           <StatBadge label={`Round ${(activeRoundIndex ?? 0) + 1}`} />
+          {roundTurns.length > 0 && (
+            <StatBadge label="Turn" value={Math.ceil(roundTurns.length / players.length)} />
+          )}
+          {activeTurn && activeRound.startTime && (
+            <StatBadge label="Time" value={<Timer startTime={activeRound.startTime} />} />
+          )}
+
           {isRoundDone && (
             <StatBadge
               label={
