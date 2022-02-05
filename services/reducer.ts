@@ -52,6 +52,7 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
       const activeTurn = getActiveTurn(state)
       const activePlayer = getActivePlayer(state)
       const hasActivePlayerPassed = getHasActivePlayerPassed(state)
+      const activeRound = getActiveRound(state)
       const nextRound = getNextRound(state)
       const nextPlayerIndex = getNextPlayerIndex(state)
       const nextPlayer = getNextPlayer(state)
@@ -78,7 +79,9 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
         ],
         rounds: isFirstTimePassing
           ? [
-              ...state.rounds.slice(0, -1),
+              ...(isLastPassForRound
+                ? [...state.rounds.slice(0, -2), { ...activeRound, endTime: Date.now() }]
+                : state.rounds.slice(0, -1)),
               { ...nextRound, playerOrder: [...nextRound.playerOrder, activePlayer.id] },
             ]
           : state.rounds,

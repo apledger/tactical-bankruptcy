@@ -86,8 +86,17 @@ export default function Home() {
           {roundTurns.length > 0 && (
             <StatBadge label="Turn" value={Math.ceil(roundTurns.length / players.length)} />
           )}
-          {activeTurn && activeRound.startTime && (
-            <StatBadge label="Time" value={<Timer startTime={activeRound.startTime} />} />
+          {activeRound.startTime && (
+            <StatBadge
+              label="Time"
+              value={
+                isRoundDone && activeRound.endTime ? (
+                  <span>{msToMS(activeRound.endTime - activeRound.startTime)}</span>
+                ) : (
+                  <Timer startTime={activeRound.startTime} />
+                )
+              }
+            />
           )}
 
           {isRoundDone && (

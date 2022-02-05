@@ -10,6 +10,7 @@ export type Turn = {
 
 export type Round = {
   startTime: number | null
+  endTime?: number
   playerOrder: string[]
 }
 
