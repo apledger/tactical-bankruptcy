@@ -2,7 +2,6 @@ import { type State } from './reducer'
 import { Player, Round, Turn, Color } from './types'
 
 export function getPlayer(state: State, id: string): Player {
-  console.log({ state, id })
   return state.players.find(player => player.id === id)
 }
 
@@ -60,4 +59,10 @@ export function getTotalPlayerTime(state: State, id: string): number {
   const playerTurns = getPlayerTurns(state, id)
 
   return playerTurns.map(turn => turn.endTime - turn.startTime).reduce((a, b) => a + b)
+}
+
+export function getOrderedPlayers(state: State): Player[] {
+  const currentRound = getActiveRound(state)
+
+  return currentRound.playerOrder.map(playerId => getPlayer(state, playerId))
 }

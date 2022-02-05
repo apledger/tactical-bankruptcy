@@ -1,12 +1,10 @@
 import { ComponentPropsWithoutRef, forwardRef, Ref } from 'react'
-import cn from 'classnames'
-
-type Size = 'small' | 'medium' | 'large'
+import classNames from 'classnames'
 
 type BaseProps = {
   color?: 'white' | 'black'
-  size?: Size
   active?: boolean
+  hover?: boolean
 }
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
@@ -17,9 +15,9 @@ type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProp
 export const Button = forwardRef(function Button(
   {
     color = 'black',
-    size = 'medium',
     disabled = false,
     active = false,
+    hover = false,
     type = 'button',
     children,
     className,
@@ -30,13 +28,23 @@ export const Button = forwardRef(function Button(
   return (
     <button
       {...rest}
-      className={cn(
-        `w-36 h-12 text-md cursor-click relative rounded-md flex items-center justify-center focus:outline-none
-      disabled:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed uppercase
-      drop-shadow hover:drop-shadow-md
-      p-4 bg-indigo-500 text-white
-      disabled:hover:bg-gray-200 disabled:hover:text-gray-600 fill-current font-bold`,
+      className={classNames(
         className,
+        `h-12 p-4 cursor-click relative rounded-md flex items-center justify-center 
+        text-lg uppercase text-white fill-current border 
+        focus:outline-none disabled:cursor-not-allowed disabled:opacity-25 active:scale-95`,
+        hover
+          ? {
+              black: 'border-black bg-black text-white',
+              white: 'text-black bg-white',
+            }[color]
+          : {
+              black:
+                'bg-transparent border-black text-black hover:bg-black hover:text-white disabled:hover:bg-transparent disabled:hover:text-black',
+              white:
+                'bg-transparent border-white text-white hover:text-black hover:bg-white disabled:hover:bg-transparent disabled:hover:text-white',
+            }[color],
+        active && 'scale-95',
       )}
       ref={ref}
       disabled={disabled}

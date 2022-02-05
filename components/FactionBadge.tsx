@@ -26,8 +26,8 @@ export function FactionBadge({
       {...rest}
       className={classNames('relative rounded-full transition-all', className)}
       style={{
-        width: { small: 60, medium: 150, large: 300 }[size],
-        height: { small: 60, medium: 150, large: 300 }[size],
+        width: { small: 48, medium: 150, large: 300 }[size],
+        height: { small: 48, medium: 150, large: 300 }[size],
         backgroundColor: faction.color,
       }}
     >
@@ -36,6 +36,7 @@ export function FactionBadge({
         style={{ opacity: iconOpacity }}
       >
         <Image
+          draggable="false"
           alt={`${faction.name} icon`}
           src={faction.icon}
           width={{ small: 30, medium: 60, large: 150 }[size]}
