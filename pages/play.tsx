@@ -56,7 +56,7 @@ export default function Home() {
         }
       }
     },
-    [dispatch, hasActivePlayerPassed, activeTurn],
+    [dispatch, hasActivePlayerPassed, activeTurn, activeRoundIndex],
   )
   useHotkeys(
     'enter, esc, tab',
@@ -145,7 +145,7 @@ export default function Home() {
               onClick={() => {
                 dispatch({
                   type: 'END_PLAYER_TURN',
-                  data: { type: 'pass' },
+                  data: { type: hasActivePlayerPassed ? 'reaction' : 'action' },
                 })
               }}
             >
