@@ -12,6 +12,11 @@ import { factions } from '../services/factions'
 import { getOrderedPlayers } from '../services/selectors'
 import { useGameContext } from '../services/useGameContext'
 
+interface PlayerValues {
+  name: string
+  factionId: string | null
+}
+
 const validationSchema = Yup.object().shape({
   name: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
   factionId: Yup.string().required('Required'),
@@ -22,6 +27,7 @@ export default function Setup() {
   const { state, dispatch } = useGameContext()
   const orderedPlayers = getOrderedPlayers(state)
   const { players } = state
+  const initialValues: PlayerValues = { name: '', factionId: null }
   const {
     values: { name, factionId },
     resetForm,
@@ -30,11 +36,15 @@ export default function Setup() {
     errors,
     touched,
   } = useFormik({
-    onSubmit: data => {
-      dispatch({ type: 'ADD_PLAYER', data })
-      resetForm()
+    onSubmit: values => {
+      const { name, factionId } = values
+
+      if (name && factionId) {
+        dispatch({ type: 'ADD_PLAYER', data: { name, factionId } })
+        resetForm()
+      }
     },
-    initialValues: { name: '', factionId: null },
+    initialValues,
     validationSchema,
   })
 
@@ -45,16 +55,16 @@ export default function Setup() {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex h-20 bg-black p-4 items-center">
+      <div className="flex h-20 p-4 items-center">
         <StatBadge label="Game setup" />
       </div>
       <div className="flex-grow flex items-center">
         <form className="grid gap-10 max-w-5xl m-auto" onSubmit={handleSubmit}>
           <div className="grid grid-cols-6 gap-4">
             {factions.map(faction => {
-              const selectedFactionColors = players.map(
-                player => factions.find(faction => faction.id === player.factionId).color,
-              )
+              const selectedFactionColors = players
+                .map(player => factions.find(faction => faction.id === player.factionId)?.color)
+                .filter(Boolean)
               const disabled = selectedFactionColors.includes(faction.color)
 
               return (

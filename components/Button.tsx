@@ -30,7 +30,7 @@ export const Button = forwardRef(function Button(
       {...rest}
       className={classNames(
         className,
-        `h-12 p-4 cursor-click relative rounded-md flex items-center justify-center 
+        `h-12 p-4 relative rounded-md flex items-center justify-center 
         text-lg uppercase text-white fill-current border 
         focus:outline-none disabled:cursor-not-allowed disabled:opacity-25 active:scale-95`,
         hover

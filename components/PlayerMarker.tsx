@@ -3,26 +3,40 @@ import { ComponentPropsWithoutRef } from 'react'
 
 import { Player } from '../services/types'
 import { FactionBadge } from './FactionBadge'
-import { Timer } from './Timer'
+import { Timer, msToMS } from './Timer'
 
 type BaseProps = {
   player: Player
-  startTime: number
+  startTime: number | null
+  totalTime: number
   isPassed: boolean
   isActive: boolean
+  isHovered: boolean
 }
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
-export function PlayerMarker({ player, startTime, isPassed, isActive, ...rest }: Props) {
+export function PlayerMarker({
+  player,
+  startTime,
+  isPassed,
+  isActive = false,
+  totalTime,
+  isHovered = false,
+  ...rest
+}: Props) {
   return (
     <div className="relative group">
       <div className="uppercase flex justify-center w-full absolute bottom-full mb-3">
         {isActive ? (
           <div className="text-3xl"> {player.name}</div>
         ) : (
-          <div className="opacity-0 group-hover:opacity-100 text-2xl transition-opacity">
-            {' '}
+          <div
+            className={classNames(
+              'text-2xl transition-opacity',
+              !isHovered && 'opacity-0 group-hover:opacity-100',
+            )}
+          >
             {player.name}
           </div>
         )}
@@ -44,7 +58,18 @@ export function PlayerMarker({ player, startTime, isPassed, isActive, ...rest }:
         </div>
       )}
       <div className="uppercase flex justify-center w-full absolute top-full mt-3">
-        {isActive && <Timer className="text-3xl" startTime={startTime} />}
+        {isActive ? (
+          startTime != null && <Timer className="text-3xl" startTime={startTime} />
+        ) : (
+          <div
+            className={classNames(
+              'text-2xl transition-opacity',
+              !isHovered && 'opacity-0 group-hover:opacity-100',
+            )}
+          >
+            {msToMS(totalTime)}
+          </div>
+        )}
       </div>
     </div>
   )

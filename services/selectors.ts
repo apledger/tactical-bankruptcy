@@ -1,27 +1,45 @@
 import { type State } from './reducer'
-import { Player, Round, Turn, Color } from './types'
+import { Player, Round, Turn } from './types'
 
 export function getPlayer(state: State, id: string): Player {
-  return state.players.find(player => player.id === id)
+  const player = state.players.find(player => player.id === id)
+
+  if (!player) throw new Error(`Player: ${id} could not be found`)
+
+  return player
 }
 
 export function getActivePlayer(state: State): Player | null {
   const activeRound = getActiveRound(state)
   const activePlayerId = activeRound.playerOrder[state.activePlayerIndex]
 
-  return state.players.find(player => player.id === activePlayerId) ?? null
+  if (!activePlayerId) return null
+
+  return getPlayer(state, activePlayerId)
 }
 
 export function getActiveRound(state: State): Round {
-  return state.rounds[state.activeRoundIndex]
+  return state.rounds[state.activeRoundIndex ?? 0]
 }
 
-export function getActiveTurn(state: State): Turn {
-  return state.turns.filter(turn => turn.roundIndex === state.activeRoundIndex).slice(-1)[0]
+export function getActiveTurn(state: State): Turn | null {
+  console.log({ turns: state.turns.filter(turn => turn.roundIndex === state.activeRoundIndex) })
+
+  return (
+    state.turns
+      .filter(turn => turn.roundIndex === state.activeRoundIndex)
+      .slice()
+      .reverse()
+      .find(turn => turn.endTime == null) ?? null
+  )
+}
+
+export function getNextRoundIndex(state: State): number {
+  return state.activeRoundIndex == null ? 0 : state.activeRoundIndex + 1
 }
 
 export function getNextRound(state: State): Round {
-  return state.rounds[state.activeRoundIndex + 1]
+  return state.rounds[getNextRoundIndex(state)]
 }
 
 export function getHasPlayerPassed(state: State, id: string): boolean {
@@ -31,26 +49,35 @@ export function getHasPlayerPassed(state: State, id: string): boolean {
   )
 }
 
+export function getIsActiveRoundDone(state: State): boolean {
+  return state.players.every(player => getHasPlayerPassed(state, player.id))
+}
+
 export function getHasActivePlayerPassed(state: State): boolean {
   const activePlayer = getActivePlayer(state)
 
-  return getHasPlayerPassed(state, activePlayer?.id)
+  if (!activePlayer) return false
+
+  return getHasPlayerPassed(state, activePlayer.id)
 }
 
 export function getNextPlayerIndex(state: State): number {
   return (state.activePlayerIndex + 1) % state.players.length
 }
 
-export function getNextPlayer(state: State): Player {
-  const nextPlayerIndex = getNextPlayerIndex(state)
+export function getNextPlayer(state: State): Player | null {
   const activeRound = getActiveRound(state)
+  const nextPlayerIndex = getNextPlayerIndex(state)
+
   const activePlayerId = activeRound.playerOrder[nextPlayerIndex]
 
-  return state.players.find(player => player.id === activePlayerId)
+  if (!activePlayerId) return null
+
+  return getPlayer(state, activePlayerId)
 }
 
 export function getPlayerTurns(state: State, id: string) {
-  const player = state.players.find(player => player.id === id)
+  const player = getPlayer(state, id)
 
   return state.turns.filter(turn => turn.playerId === player.id)
 }
@@ -58,11 +85,13 @@ export function getPlayerTurns(state: State, id: string) {
 export function getTotalPlayerTime(state: State, id: string): number {
   const playerTurns = getPlayerTurns(state, id)
 
-  return playerTurns.map(turn => turn.endTime - turn.startTime).reduce((a, b) => a + b)
+  return playerTurns
+    .map(turn => (turn.endTime ?? Date.now()) - turn.startTime)
+    .reduce((a, b) => a + b, 0)
 }
 
-export function getOrderedPlayers(state: State): Player[] {
-  const currentRound = getActiveRound(state)
+export function getOrderedPlayers(state: State, roundIndex?: number): Player[] {
+  const round = roundIndex != null ? state.rounds[roundIndex] : getActiveRound(state)
 
-  return currentRound.playerOrder.map(playerId => getPlayer(state, playerId))
+  return round?.playerOrder.map(playerId => getPlayer(state, playerId)) ?? []
 }

@@ -43,8 +43,6 @@ export default function Home() {
   const activeTurn = getActiveTurn(state)
   const hasActivePlayerPassed = getHasActivePlayerPassed(state)
 
-  console.log({ players: state.players })
-
   useEffect(() => {
     if (state.players.length === 0) router.push('/setup')
   }, [state, router])

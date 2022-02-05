@@ -6,30 +6,31 @@ import {
   getNextPlayer,
   getNextPlayerIndex,
   getNextRound,
+  getNextRoundIndex,
 } from './selectors'
 import { Player, Round, Turn, Actions } from './types'
 
-import { players } from './players'
 import { v4 } from 'uuid'
 
 export type State = {
   turns: Turn[]
   rounds: Round[]
   players: Player[]
-  activeRoundIndex: number
+  activeRoundIndex: number | null
   activePlayerIndex: number
 }
 
 export function reducer<S extends State, A extends Actions>(state: S, action: A): State {
   switch (action.type) {
     case 'START_ROUND': {
-      const activeRound = getActiveRound(state)
+      const nextRound = getNextRound(state)
+      const nextRoundIndex = getNextRoundIndex(state)
 
       return {
         ...state,
         rounds: [
           ...state.rounds.slice(0, -1),
-          { ...activeRound, startTime: Date.now() },
+          { ...nextRound, startTime: Date.now() },
           {
             startTime: null,
             playerOrder: [],
@@ -39,10 +40,11 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
           ...state.turns,
           {
             startTime: Date.now(),
-            roundIndex: state.activeRoundIndex,
-            playerId: activeRound.playerOrder[0],
+            roundIndex: nextRoundIndex,
+            playerId: nextRound.playerOrder[0],
           },
         ],
+        activeRoundIndex: nextRoundIndex,
       }
     }
 
@@ -56,6 +58,8 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
       const isFirstTimePassing = !hasActivePlayerPassed && action.data.type === 'pass'
       const isLastPassForRound =
         isFirstTimePassing && nextRound.playerOrder.length === state.players.length - 1
+
+      if (!activePlayer || !nextPlayer) return state
 
       return {
         ...state,
@@ -78,7 +82,6 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
               { ...nextRound, playerOrder: [...nextRound.playerOrder, activePlayer.id] },
             ]
           : state.rounds,
-        activeRoundIndex: isLastPassForRound ? state.activeRoundIndex + 1 : state.activeRoundIndex,
         activePlayerIndex: isLastPassForRound ? 0 : nextPlayerIndex,
       }
     }
@@ -86,6 +89,7 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
     case 'ADD_PLAYER': {
       const currentRound = getActiveRound(state)
       const player = { id: v4(), ...action.data }
+
       return {
         ...state,
         players: [...state.players, player],
@@ -101,6 +105,6 @@ export const defaultState: State = {
   turns: [],
   rounds: [{ startTime: null, playerOrder: [] }],
   players: [],
-  activeRoundIndex: 0,
+  activeRoundIndex: null,
   activePlayerIndex: 0,
 }

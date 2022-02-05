@@ -7,7 +7,7 @@ type BaseProps = {
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
-function msToMS(ms: number): string {
+export function msToMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60),
     minutes = Math.floor((ms / (1000 * 60)) % 60)
 
@@ -26,12 +26,6 @@ export function Timer({ startTime, className, ...rest }: Props) {
 
     return () => clearInterval(intervalId)
   }, [startTime])
-
-  useEffect(() => {
-    if (elapsed > 10 * 1000) {
-      const audo = new Audio('./public/Brass.mp3')
-    }
-  }, [elapsed])
 
   return (
     <div {...rest} className={classNames('text-xl', className)}>
