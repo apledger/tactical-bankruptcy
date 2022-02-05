@@ -1,4 +1,4 @@
-import { useContext, createContext, Dispatch } from 'react'
+import { useContext, createContext, Dispatch, ReactNode } from 'react'
 import { defaultState, reducer, State } from './reducer'
 import { Actions } from './types'
 import { useHistoryReducer } from './useHistoryReducer'
@@ -17,14 +17,19 @@ export const GameContext = createContext<Context>({
   canRedo: false,
 })
 
-export function GameContextProvider(props) {
+type Props = {
+  children: ReactNode
+}
+
+export function GameContextProvider({ children }: Props) {
   const [{ present: state, past, future }, dispatch] = useHistoryReducer(reducer, defaultState)
 
   return (
     <GameContext.Provider
-      {...props}
       value={{ state, dispatch, canUndo: past.length > 0, canRedo: future.length > 0 }}
-    ></GameContext.Provider>
+    >
+      {children}
+    </GameContext.Provider>
   )
 }
 
