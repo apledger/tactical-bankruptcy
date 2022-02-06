@@ -14,7 +14,7 @@ import { FactionBadge } from '../components/FactionBadge'
 import { FactionName } from '../components/FactionName'
 import { Button } from '../components/Button'
 import { Input } from '../components/Input'
-import { Checkbox } from '../components/Checkbox'
+import { TraitorCheckbox } from '../components/TraitorCheckbox'
 import { StatBadge } from '../components/StatBadge'
 import { useGameContext } from '../services/useGameContext'
 import { useRouter } from 'next/router'
@@ -106,7 +106,7 @@ export default function Home() {
               ))}
               <div className="flex justify-between items-center gap-4">
                 <div className="text-xl">Traitor Tile</div>
-                <Checkbox
+                <TraitorCheckbox
                   className="w-20 appearance-none hover:appearance-none"
                   value={focusedPlayer.score?.traitor === -2}
                   onChange={value =>
