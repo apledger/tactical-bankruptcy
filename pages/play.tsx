@@ -49,7 +49,9 @@ export default function Home() {
   ])
   useHotkeys(
     'space',
-    () => {
+    e => {
+      e.preventDefault()
+
       if (activeTurn) {
         dispatch({
           type: 'END_PLAYER_TURN',
@@ -77,7 +79,7 @@ export default function Home() {
         })
       }
     },
-    [dispatch, hasActivePlayerPassed, activeTurn],
+    [dispatch, activeTurn],
   )
 
   return (
