@@ -1,3 +1,5 @@
+import { faRedo, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
@@ -7,6 +9,7 @@ import * as Yup from 'yup'
 
 import { Button } from '../components/Button'
 import { FactionBadge } from '../components/FactionBadge'
+import { IconButton } from '../components/IconButton'
 import { Input } from '../components/Input'
 import { StatBadge } from '../components/StatBadge'
 import { factions } from '../services/factions'
@@ -25,7 +28,7 @@ const validationSchema = Yup.object().shape({
 
 export default function Setup() {
   const router = useRouter()
-  const { state, dispatch } = useGameContext()
+  const { state, dispatch, canUndo, canRedo } = useGameContext()
   const orderedPlayers = getOrderedPlayers(state)
   const { players } = state
   const initialValues: PlayerValues = { name: '', factionId: null }
@@ -57,8 +60,26 @@ export default function Setup() {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex h-20 p-4 items-center">
+      <div className="flex h-20 p-4 items-center justify-between">
         <StatBadge label="Game setup" />
+        <div className="flex gap-2">
+          <IconButton
+            disabled={!canUndo}
+            onClick={() => {
+              dispatch({ type: 'UNDO' })
+            }}
+          >
+            <FontAwesomeIcon icon={faUndo} />
+          </IconButton>
+          <IconButton
+            disabled={!canRedo}
+            onClick={() => {
+              dispatch({ type: 'REDO' })
+            }}
+          >
+            <FontAwesomeIcon icon={faRedo} />
+          </IconButton>
+        </div>
       </div>
       <div className="flex-grow flex items-center">
         <form className="grid gap-10 max-w-5xl m-auto" onSubmit={handleSubmit}>

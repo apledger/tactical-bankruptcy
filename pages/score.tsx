@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import {
   getTotalPlayerTime,

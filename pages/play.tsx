@@ -63,7 +63,7 @@ export default function Home() {
         }
       }
     },
-    [dispatch, hasActivePlayerPassed, activeTurn, activeRoundIndex],
+    [dispatch, hasActivePlayerPassed, activeTurn, isLastRound],
   )
   useHotkeys(
     'enter, esc, tab',
@@ -101,16 +101,23 @@ export default function Home() {
             />
           )}
 
-          {isRoundDone && (
-            <StatBadge
-              label={
-                <div className="flex items-center gap-2">
-                  <CombatStars />
-                  <span>Combat and Upkeep</span>
-                </div>
-              }
-              color="orange"
-            />
+          {isRoundDone && activeRound.endTime && (
+            <>
+              <StatBadge
+                label={
+                  <div className="flex items-center gap-2">
+                    <CombatStars />
+                    <span>Combat and Upkeep</span>
+                  </div>
+                }
+                color="orange"
+              />
+              <StatBadge
+                label="Time"
+                color="orange"
+                value={<Timer startTime={activeRound.endTime} />}
+              />
+            </>
           )}
         </div>
         <div className="flex gap-2">
