@@ -82,42 +82,45 @@ export default function Setup() {
         </div>
       </div>
       <div className="flex-grow flex items-center">
-        <form className="grid gap-10 max-w-5xl m-auto" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-6 gap-4 relative ">
-            {errors.factionId && touched.factionId && (
-              <div className="absolute bottom-full mb-4 text-lg text-red-500 uppercase justify-center w-full flex">
-                Please select a faction
-              </div>
-            )}
-            {factions.map(faction => {
-              const selectedFactionColors = players
-                .map(player => factions.find(faction => faction.id === player.factionId)?.color)
-                .filter(Boolean)
-              const disabled = selectedFactionColors.includes(faction.color)
+        <form className="flex flex-col gap-10 max-w-5xl m-auto w-full" onSubmit={handleSubmit}>
+          <div className="p-4 overflow-x-auto">
+            <div className="flex flex-wrap gap-4" style={{ width: 1000 }}>
+              {errors.factionId && touched.factionId && (
+                <div className="absolute bottom-full mb-4 text-lg text-red-500 uppercase justify-center w-full flex">
+                  Please select a faction
+                </div>
+              )}
+              {factions.map(faction => {
+                const selectedFactionColors = players
+                  .map(player => factions.find(faction => faction.id === player.factionId)?.color)
+                  .filter(Boolean)
+                const disabled = selectedFactionColors.includes(faction.color)
 
-              return (
-                <FactionBadge
-                  type="button"
-                  key={faction.id}
-                  className={classNames(
-                    'transform hover:scale-105 disabled:opacity-5 disabled:scale-90 disabled:hover:scale-90 disabled:cursor-not-allowed',
-                    !disabled && factionId !== null && faction.id === factionId && 'scale-105',
-                    !disabled &&
-                      factionId !== null &&
-                      faction.id !== factionId &&
-                      'scale-90 hover:scale-100 opacity-60',
-                  )}
-                  disabled={disabled}
-                  factionId={faction.id}
-                  onPointerDown={e => {
-                    e.preventDefault()
-                    setFieldValue('factionId', faction.id)
-                    nameInput.current?.focus()
-                  }}
-                />
-              )
-            })}
+                return (
+                  <FactionBadge
+                    type="button"
+                    key={faction.id}
+                    className={classNames(
+                      'transform hover:scale-105 disabled:opacity-5 disabled:scale-90 disabled:hover:scale-90 disabled:cursor-not-allowed',
+                      !disabled && factionId !== null && faction.id === factionId && 'scale-105',
+                      !disabled &&
+                        factionId !== null &&
+                        faction.id !== factionId &&
+                        'scale-90 hover:scale-100 opacity-60',
+                    )}
+                    disabled={disabled}
+                    factionId={faction.id}
+                    onPointerDown={e => {
+                      e.preventDefault()
+                      setFieldValue('factionId', faction.id)
+                      nameInput.current?.focus()
+                    }}
+                  />
+                )
+              })}
+            </div>
           </div>
+
           <div className="grid gap-1 w-96 m-auto">
             <div className="text-md uppercase text-gray-500">Name</div>
             <div className="flex gap-2 relative">
@@ -140,9 +143,9 @@ export default function Setup() {
         </form>
       </div>
 
-      <div className="bg-black h-20 flex items-center justify-between px-4">
-        <div className="flex gap-4">
-          <StatBadge label="Players" />
+      <div className="bg-black h-20 flex items-center justify-between px-4 gap-2 min-w-0">
+        <div className="flex gap-4 overflow-x-auto">
+          <StatBadge label="Players" className="hidden sm:flex" />
           <div className="flex gap-2">
             {orderedPlayers.map(player => (
               <FactionBadge
@@ -154,7 +157,12 @@ export default function Setup() {
             ))}
           </div>
         </div>
-        <Button color="white" disabled={players.length < 2} onClick={() => router.push('/play')}>
+        <Button
+          className="flex-shrink-0"
+          color="white"
+          disabled={players.length < 2}
+          onClick={() => router.push('/play')}
+        >
           Start game
         </Button>
       </div>

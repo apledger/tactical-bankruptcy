@@ -142,7 +142,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center max-w-lg w-full mx-auto">
+      <div className="flex-1 flex flex-col items-center justify-center">
         <div
           className={cn(
             'flex gap-4 items-center justify-center',
