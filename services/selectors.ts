@@ -1,6 +1,8 @@
 import { type State } from './reducer'
 import { Player, Round, Turn } from './types'
 
+const LAST_ROUND_INDEX = 7
+
 export function getPlayer(state: State, id: string): Player {
   const player = state.players.find(player => player.id === id)
 
@@ -88,6 +90,24 @@ export function getTotalPlayerTime(state: State, id: string): number {
     .reduce((a, b) => a + b, 0)
 }
 
+export function getTotalPlayerActions(state: State, id: string): number {
+  const playerTurns = getPlayerTurns(state, id)
+
+  return playerTurns.filter(turn => turn.type === 'action').length
+}
+
+export function getTotalPlayerReactions(state: State, id: string): number {
+  const playerTurns = getPlayerTurns(state, id)
+
+  return playerTurns.filter(turn => turn.type === 'reaction').length
+}
+
+export function getTotalPlayerPasses(state: State, id: string): number {
+  const playerTurns = getPlayerTurns(state, id)
+
+  return playerTurns.filter(turn => turn.type === 'pass').length
+}
+
 export function getOrderedPlayers(state: State, roundIndex?: number): Player[] {
   const round = roundIndex != null ? state.rounds[roundIndex] : getActiveRound(state)
 
@@ -102,4 +122,13 @@ export function getActiveRoundTurns(state: State): Turn[] {
 
 export function getIsLastRound(state: State): boolean {
   return state.activeRoundIndex === 7
+}
+
+export function getTotalGameTime(state: State): number {
+  const firstRound = state.rounds[0]
+  const lastRound = state.rounds[LAST_ROUND_INDEX]
+
+  if (lastRound?.endTime && firstRound.startTime) return lastRound.endTime - firstRound.startTime
+
+  return 0
 }

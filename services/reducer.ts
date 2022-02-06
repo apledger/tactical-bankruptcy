@@ -3,6 +3,7 @@ import {
   getActiveRound,
   getActiveTurn,
   getHasActivePlayerPassed,
+  getIsLastRound,
   getNextPlayer,
   getNextPlayerIndex,
   getNextRound,
@@ -23,8 +24,8 @@ export type State = {
 export function reducer<S extends State, A extends Actions>(state: S, action: A): State {
   switch (action.type) {
     case 'START_ROUND': {
-      const nextRound = getNextRound(state)
       const nextRoundIndex = getNextRoundIndex(state)
+      const nextRound = getNextRound(state)
 
       return {
         ...state,

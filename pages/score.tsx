@@ -18,13 +18,19 @@ import {
   getHasPlayerPassed,
   getTotalPlayerTime,
   getPlayer,
+  getTotalGameTime,
+  getTotalPlayerActions,
+  getTotalPlayerReactions,
+  getTotalPlayerPasses,
 } from '../services/selectors'
 import { useHistoryReducer } from '../services/useHistoryReducer'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { PlayerMarker } from '../components/PlayerMarker'
 import { FactionBadge } from '../components/FactionBadge'
 import { useGameContext } from '../services/useGameContext'
+import { factions } from '../services/factions'
 import { useRouter } from 'next/router'
+import { StatBadge } from '../components/StatBadge'
 
 function msToHMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60)
@@ -40,62 +46,117 @@ export default function Home() {
   const router = useRouter()
   const { state, dispatch } = useGameContext()
   const { players } = state
-  const activeTurn = getActiveTurn(state)
-  const hasActivePlayerPassed = getHasActivePlayerPassed(state)
 
   useEffect(() => {
     if (state.players.length === 0) router.push('/setup')
   }, [state, router])
 
-  useHotkeys('cmd+z, ctrl+z', () => dispatch({ type: 'UNDO' }), [dispatch])
-  useHotkeys('cmd+shift+z, ctrl+shift+z, cmd+y, ctrl+y', () => dispatch({ type: 'REDO' }), [
-    dispatch,
-  ])
   useHotkeys(
-    'space',
+    'cmd+z, ctrl+z',
     () => {
-      if (activeTurn) {
-        dispatch({
-          type: 'END_PLAYER_TURN',
-          data: { type: hasActivePlayerPassed ? 'reaction' : 'action' },
-        })
-      } else {
-        dispatch({ type: 'START_ROUND' })
-      }
+      router.push('play')
     },
-    [dispatch, hasActivePlayerPassed, activeTurn],
-  )
-  useHotkeys(
-    'enter, esc',
-    () => {
-      if (activeTurn) {
-        dispatch({
-          type: 'END_PLAYER_TURN',
-          data: { type: 'pass' },
-        })
-      }
-    },
-    [dispatch, hasActivePlayerPassed, activeTurn],
+    [router],
   )
 
   return (
-    <div className="h-screen flex flex-col">
-      <div className="h-24 bg-black flex flex-col items-center justify-center">
-        <div className="text-md font-display text-white uppercase">Game Over</div>
+    <div className="h-screen flex flex-col w-full">
+      <div className="h-20 p-4 flex items-center justify-between">
+        <div className="flex gap-2">
+          <StatBadge label="Game Over" />
+          <StatBadge label="Turns" value={Math.ceil(state.turns.length / players.length)} />
+          <StatBadge label="Time" value={msToHMS(getTotalGameTime(state))} />
+        </div>
       </div>
-      <div className="grid p-5 max-w-lg mx-auto w-full">
-        {players.map(player => (
-          <div
-            key={player.id}
-            className="flex justify-between items-center p-4 border-b border-black/25"
-          >
-            <div className="flex gap-3 items-center">
-              <FactionBadge factionId={player.factionId} size="small" />
-              <div className="text-lg uppercase">{player.name}</div>
-            </div>
-            <div className="text-lg">{msToHMS(getTotalPlayerTime(state, player.id))}</div>
-          </div>
-        ))}
+
+      <div className="w-full flex-grow flex justify-center pt-20">
+        <div className="max-w-5xl w-9/12">
+          <table className="min-w-full divide-y divide-slate-200 border border-slate-200">
+            <thead className="bg-slate-50">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                >
+                  Name
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                >
+                  Reactions
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                >
+                  Passes
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                >
+                  Time
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                >
+                  Score
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-slate-200 uppercase">
+              {players.map(player => {
+                const faction = factions.find(f => f.id === player.factionId)
+
+                return (
+                  <tr key={player.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-12 w-12">
+                          <FactionBadge factionId={player.factionId} size="small" />
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-xl font-medium text-slate-900 leading-none">
+                            {player.name}
+                          </div>
+                          <div className="text-xs text-slate-500">{faction?.name}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-xl text-slate-900">
+                        {getTotalPlayerActions(state, player.id)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-xl text-slate-900">
+                        {getTotalPlayerReactions(state, player.id)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-xl text-slate-900">
+                        {getTotalPlayerPasses(state, player.id)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-xl text-slate-900">
+                        {msToHMS(getTotalPlayerTime(state, player.id))}
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

@@ -33,7 +33,7 @@ export const factions: Faction[] = [
   },
   {
     id: 'black-alien',
-    name: 'Mechanema',
+    name: 'Orion',
     color: '#3D3D3D',
     icon: '/icons/orion.svg',
   },
