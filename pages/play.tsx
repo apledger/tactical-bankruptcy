@@ -3,9 +3,6 @@
 import { useEffect } from 'react'
 import classNames from 'classnames'
 import {
-  faUndo,
-  faRedo,
-  faArrowDown,
   faArrowAltCircleDown,
   faArrowAltCircleLeft,
   faArrowAltCircleRight,

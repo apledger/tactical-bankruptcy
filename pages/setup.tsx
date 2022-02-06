@@ -1,4 +1,4 @@
-import { faRedo, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { faArrowAltCircleLeft, faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import { useFormik } from 'formik'
@@ -62,14 +62,14 @@ export default function Setup() {
     <div className="flex flex-col h-screen">
       <div className="flex h-20 p-4 items-center justify-between">
         <StatBadge label="Game setup" />
-        <div className="flex gap-2">
+        <div className="flex gap-4">
           <IconButton
             disabled={!canUndo}
             onClick={() => {
               dispatch({ type: 'UNDO' })
             }}
           >
-            <FontAwesomeIcon icon={faUndo} />
+            <FontAwesomeIcon icon={faArrowAltCircleLeft} size="2x" />
           </IconButton>
           <IconButton
             disabled={!canRedo}
@@ -77,7 +77,7 @@ export default function Setup() {
               dispatch({ type: 'REDO' })
             }}
           >
-            <FontAwesomeIcon icon={faRedo} />
+            <FontAwesomeIcon icon={faArrowAltCircleRight} size="2x" />
           </IconButton>
         </div>
       </div>
@@ -163,7 +163,7 @@ export default function Setup() {
           disabled={players.length < 2}
           onClick={() => router.push('/play')}
         >
-          Start game
+          Create game
         </Button>
       </div>
     </div>
