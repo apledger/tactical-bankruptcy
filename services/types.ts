@@ -14,10 +14,22 @@ export type Round = {
   playerOrder: string[]
 }
 
+export type Score = {
+  reputation?: number
+  ambassador?: number
+  sectors?: number
+  monoliths?: number
+  discoveries?: number
+  traitor?: number
+  tech?: number
+  bonus?: number
+}
+
 export type Player = {
   id: string
   factionId: string
   name: string
+  score?: Score
 }
 
 export type Actions =
@@ -26,6 +38,9 @@ export type Actions =
   | { type: 'START_ROUND' }
   | { type: 'END_PLAYER_TURN'; data: { type: Turn['type'] } }
   | { type: 'ADD_PLAYER'; data: { factionId: string; name: string } }
+  | { type: 'UPDATE_PLAYER_SCORE'; data: { playerId: string; value: number; key: string } }
+  | { type: 'FOCUS_PLAYER'; data: { playerId: string } }
+  | { type: 'BLUR_PLAYER' }
 
 export type Faction = {
   id: string

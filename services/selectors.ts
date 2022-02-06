@@ -132,3 +132,9 @@ export function getTotalGameTime(state: State): number {
 
   return 0
 }
+
+export function getFocusedPlayer(state: State): Player | null {
+  if (state.focusedPlayerId == null) return null
+
+  return getPlayer(state, state.focusedPlayerId)
+}

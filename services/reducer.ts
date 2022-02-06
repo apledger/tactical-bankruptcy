@@ -3,11 +3,11 @@ import {
   getActiveRound,
   getActiveTurn,
   getHasActivePlayerPassed,
-  getIsLastRound,
   getNextPlayer,
   getNextPlayerIndex,
   getNextRound,
   getNextRoundIndex,
+  getPlayer,
 } from './selectors'
 import { Player, Round, Turn, Actions } from './types'
 
@@ -19,6 +19,7 @@ export type State = {
   players: Player[]
   activeRoundIndex: number | null
   activePlayerIndex: number
+  focusedPlayerId: string | null
 }
 
 export function reducer<S extends State, A extends Actions>(state: S, action: A): State {
@@ -100,6 +101,32 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
         rounds: [{ ...currentRound, playerOrder: [player.id, ...currentRound.playerOrder] }],
       }
     }
+
+    case 'UPDATE_PLAYER_SCORE': {
+      const { playerId, key, value } = action.data
+      const player = getPlayer(state, playerId)
+
+      return {
+        ...state,
+        players: state.players.map(p =>
+          p === player ? { ...player, score: { ...player.score, [key]: value } } : p,
+        ),
+      }
+    }
+
+    case 'FOCUS_PLAYER': {
+      return {
+        ...state,
+        focusedPlayerId: action.data.playerId,
+      }
+    }
+
+    case 'BLUR_PLAYER': {
+      return {
+        ...state,
+        focusedPlayerId: null,
+      }
+    }
   }
 
   return state
@@ -111,4 +138,5 @@ export const defaultState: State = {
   players: [],
   activeRoundIndex: null,
   activePlayerIndex: 0,
+  focusedPlayerId: null,
 }
