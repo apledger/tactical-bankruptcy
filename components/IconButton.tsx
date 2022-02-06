@@ -14,7 +14,7 @@ export const IconButton = forwardRef(function IconButton(
       {...rest}
       className={classNames(
         className,
-        `w-8 h-8 fill-current stroke-current text-slate-500 relative rounded-md flex items-center justify-center 
+        `w-8 h-8 fill-current stroke-current text-zinc-400 relative rounded-md flex items-center justify-center 
         text-lg uppercase text-white fill-current bg-transparent
         focus:outline-none disabled:cursor-not-allowed disabled:opacity-25 active:scale-95`,
       )}

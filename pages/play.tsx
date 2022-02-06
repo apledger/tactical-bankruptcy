@@ -1,8 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import { useEffect } from 'react'
-import cn from 'classnames'
-import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons'
+import classNames from 'classnames'
+import {
+  faUndo,
+  faRedo,
+  faArrowDown,
+  faArrowAltCircleDown,
+  faArrowAltCircleLeft,
+  faArrowAltCircleRight,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Button } from '../components/Button'
@@ -122,14 +129,14 @@ export default function Home() {
             </>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-4">
           <IconButton
             disabled={!canUndo}
             onClick={() => {
               dispatch({ type: 'UNDO' })
             }}
           >
-            <FontAwesomeIcon icon={faUndo} />
+            <FontAwesomeIcon icon={faArrowAltCircleLeft} size="2x" />
           </IconButton>
           <IconButton
             disabled={!canRedo}
@@ -137,14 +144,14 @@ export default function Home() {
               dispatch({ type: 'REDO' })
             }}
           >
-            <FontAwesomeIcon icon={faRedo} />
+            <FontAwesomeIcon icon={faArrowAltCircleRight} size="2x" />
           </IconButton>
         </div>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">
         <div
-          className={cn(
+          className={classNames(
             'flex gap-4 items-center justify-center',
             {
               2: 'grid-cols-2',
@@ -208,7 +215,7 @@ export default function Home() {
             </>
           )}
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center relative">
           {activeTurn ? (
             <>
               <div className="text-white uppercase text-lg">Pass</div>
@@ -248,6 +255,7 @@ export default function Home() {
                   : 'Start Next Round'}
               </div>
               <Button
+                className="relative"
                 color="white"
                 onClick={() => {
                   if (isLastRound) {
@@ -258,6 +266,15 @@ export default function Home() {
                 }}
               >
                 Space
+                {activeRoundIndex === null && (
+                  <div className="absolute bottom-full mb-5 left-1/2 transform -translate-x-1/2">
+                    <FontAwesomeIcon
+                      icon={faArrowAltCircleDown}
+                      className="animate-bounce text-black"
+                      size="2x"
+                    />
+                  </div>
+                )}
               </Button>
             </>
           )}

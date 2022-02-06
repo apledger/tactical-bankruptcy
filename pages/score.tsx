@@ -18,7 +18,7 @@ import { TraitorCheckbox } from '../components/TraitorCheckbox'
 import { StatBadge } from '../components/StatBadge'
 import { useGameContext } from '../services/useGameContext'
 import { useRouter } from 'next/router'
-import { Player, Score } from '../services/types'
+import { Score } from '../services/types'
 
 function msToHMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60)
@@ -62,16 +62,14 @@ export default function Home() {
 
       <div className="w-full flex justify-center pt-10">
         {focusedPlayer ? (
-          <div className="uppercase w-96 divide-y divide-slate-200 border border-slate-200">
-            <div className="flex justify-between p-4 bg-slate-50">
+          <div className="uppercase w-96 divide-y divide-zinc-200 border border-zinc-200">
+            <div className="flex justify-between p-4 bg-zinc-100">
               <div className="flex items-center">
                 <div className="flex-shrink-0 h-12 w-12">
                   <FactionBadge factionId={focusedPlayer.factionId} size="small" />
                 </div>
                 <div className="ml-4">
-                  <div className="text-xl font-medium text-slate-900 leading-none">
-                    {focusedPlayer.name}
-                  </div>
+                  <div className="text-xl font-medium leading-none">{focusedPlayer.name}</div>
                   <FactionName className="text-gray-500" factionId={focusedPlayer.factionId} />
                 </div>
               </div>
@@ -131,48 +129,48 @@ export default function Home() {
           </div>
         ) : (
           <div className="max-w-5xl w-9/12">
-            <table className="min-w-full divide-y divide-slate-200 border border-slate-200">
-              <thead className="bg-slate-50">
+            <table className="min-w-full divide-y divide-zinc-200 border border-zinc-200">
+              <thead className="bg-zinc-100">
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
                     Name
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
                     Actions
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
                     Reactions
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
                     Passes
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
                     Time
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
                     Score
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-200 uppercase">
+              <tbody className="bg-white divide-y divide-zinc-200 uppercase">
                 {players.map(player => {
                   return (
                     <tr key={player.id}>
@@ -182,30 +180,22 @@ export default function Home() {
                             <FactionBadge factionId={player.factionId} size="small" />
                           </div>
                           <div className="ml-4">
-                            <div className="text-xl font-medium text-slate-900 leading-none">
-                              {player.name}
-                            </div>
+                            <div className="text-xl font-medium leading-none">{player.name}</div>
                             <FactionName className="text-gray-500" factionId={player.factionId} />
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-xl text-slate-900">
-                          {getTotalPlayerActions(state, player.id)}
-                        </div>
+                        <div className="text-xl">{getTotalPlayerActions(state, player.id)}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-xl text-slate-900">
-                          {getTotalPlayerReactions(state, player.id)}
-                        </div>
+                        <div className="text-xl">{getTotalPlayerReactions(state, player.id)}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-xl text-slate-900">
-                          {getTotalPlayerPasses(state, player.id)}
-                        </div>
+                        <div className="text-xl">{getTotalPlayerPasses(state, player.id)}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-xl text-slate-900">
+                        <div className="text-xl">
                           {msToHMS(getTotalPlayerTime(state, player.id))}
                         </div>
                       </td>
