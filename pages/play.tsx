@@ -54,7 +54,7 @@ export default function Home() {
           data: { type: hasActivePlayerPassed ? 'reaction' : 'action' },
         })
       } else {
-        if (activeRoundIndex === null || activeRoundIndex === 0) {
+        if (activeRoundIndex === null || activeRoundIndex < 7) {
           dispatch({ type: 'START_ROUND' })
         } else {
           router.push('/score')
@@ -147,6 +147,7 @@ export default function Home() {
           {getOrderedPlayers(state).map((player, index) => (
             <PlayerMarker
               key={player.id}
+              layout
               player={player}
               startTime={activeTurn && index === activePlayerIndex ? activeTurn.startTime : null}
               totalTime={getTotalPlayerTime(state, player.id)}

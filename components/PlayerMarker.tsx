@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { ComponentPropsWithoutRef } from 'react'
+import { motion, MotionProps } from 'framer-motion'
 
 import { Player } from '../services/types'
 import { FactionBadge } from './FactionBadge'
@@ -14,7 +15,7 @@ type BaseProps = {
   isHovered: boolean
 }
 
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+type Props = BaseProps & MotionProps & ComponentPropsWithoutRef<'div'>
 
 export function PlayerMarker({
   player,
@@ -23,10 +24,11 @@ export function PlayerMarker({
   isActive = false,
   totalTime,
   isHovered = false,
+  className,
   ...rest
 }: Props) {
   return (
-    <div className="relative group">
+    <motion.div {...rest} className={classNames(className, 'relative group')}>
       <div className="uppercase flex justify-center w-full absolute bottom-full mb-3">
         {isActive ? (
           <div className="text-3xl"> {player.name}</div>
@@ -71,6 +73,6 @@ export function PlayerMarker({
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
