@@ -15,6 +15,7 @@ import {
   getIsActiveRoundDone,
   getActiveRoundTurns,
   getActiveRound,
+  getIsLastRound,
 } from '../services/selectors'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { PlayerMarker } from '../components/PlayerMarker'
@@ -35,6 +36,7 @@ export default function Home() {
   const hasActivePlayerPassed = getHasActivePlayerPassed(state)
   const isRoundDone = getIsActiveRoundDone(state)
   const roundTurns = getActiveRoundTurns(state)
+  const isLastRound = getIsLastRound(state)
 
   useEffect(() => {
     if (state.players.length === 0) router.push('/setup')
@@ -54,10 +56,10 @@ export default function Home() {
           data: { type: hasActivePlayerPassed ? 'reaction' : 'action' },
         })
       } else {
-        if (activeRoundIndex === null || activeRoundIndex < 7) {
-          dispatch({ type: 'START_ROUND' })
-        } else {
+        if (isLastRound) {
           router.push('/score')
+        } else {
+          dispatch({ type: 'START_ROUND' })
         }
       }
     },
@@ -230,19 +232,19 @@ export default function Home() {
           ) : (
             <>
               <div className="text-white uppercase text-lg">
-                {activeRoundIndex == null
+                {isLastRound
+                  ? 'End Game'
+                  : activeRoundIndex === null
                   ? 'Start Game'
-                  : activeRoundIndex < 7
-                  ? 'Start Next Round'
-                  : 'End Game'}
+                  : 'Start Next Round'}
               </div>
               <Button
                 color="white"
                 onClick={() => {
-                  if (activeRoundIndex === null || activeRoundIndex === 0) {
-                    dispatch({ type: 'START_ROUND' })
-                  } else {
+                  if (isLastRound) {
                     router.push('/score')
+                  } else {
+                    dispatch({ type: 'START_ROUND' })
                   }
                 }}
               >

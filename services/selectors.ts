@@ -99,3 +99,7 @@ export function getActiveRoundTurns(state: State): Turn[] {
 
   return state.turns.filter(turn => turn.roundIndex === activeRoundIndex)
 }
+
+export function getIsLastRound(state: State): boolean {
+  return state.activeRoundIndex === 7
+}
