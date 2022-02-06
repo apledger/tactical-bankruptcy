@@ -60,10 +60,10 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full flex-grow flex justify-center pt-20">
+      <div className="w-full flex justify-center pt-10">
         {focusedPlayer ? (
-          <div className="uppercase w-96">
-            <div className="flex justify-between mb-8">
+          <div className="uppercase w-96 divide-y divide-slate-200 border border-slate-200">
+            <div className="flex justify-between p-4 bg-slate-50">
               <div className="flex items-center">
                 <div className="flex-shrink-0 h-12 w-12">
                   <FactionBadge factionId={focusedPlayer.factionId} size="small" />
@@ -79,7 +79,7 @@ export default function Home() {
                 Done
               </Button>
             </div>
-            <div className="grid gap-2">
+            <div className="grid gap-2 p-4">
               {scoreFields.map(({ key, label }) => (
                 <div key={key} className="flex justify-between items-center gap-4">
                   <div className="text-xl">{label}</div>
@@ -120,6 +120,12 @@ export default function Home() {
                     })
                   }
                 />
+              </div>
+            </div>
+            <div className="flex p-4 justify-between">
+              <div className="text-xl">Total</div>
+              <div className="text-xl w-20 text-center">
+                {Object.values(focusedPlayer.score ?? {}).reduce((a, b) => a + b, 0)}
               </div>
             </div>
           </div>
@@ -209,6 +215,7 @@ export default function Home() {
                           onClick={() =>
                             dispatch({ type: 'FOCUS_PLAYER', data: { playerId: player.id } })
                           }
+                          hover={player.score != null}
                         >
                           {player.score
                             ? Object.values(player.score).reduce((a, b) => a + b)
