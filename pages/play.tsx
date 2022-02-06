@@ -8,6 +8,7 @@ import {
   faArrowAltCircleRight,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 import { Button } from '../components/Button'
 import {
@@ -21,7 +22,6 @@ import {
   getActiveRound,
   getIsLastRound,
 } from '../services/selectors'
-import { useHotkeys } from 'react-hotkeys-hook'
 import { PlayerMarker } from '../components/PlayerMarker'
 import { FactionBadge } from '../components/FactionBadge'
 import { useGameContext } from '../services/useGameContext'
@@ -71,12 +71,14 @@ export default function Home() {
     },
     [dispatch, hasActivePlayerPassed, activeTurn, isLastRound],
   )
-  useHotkeys(
-    'enter, esc, tab',
-    e => {
-      e.preventDefault()
 
-      if (activeTurn) {
+  // Use * here because 'shift' doesn't fire
+  useHotkeys(
+    '*',
+    e => {
+      if (e.key === 'Shift' && activeTurn) {
+        e.preventDefault()
+
         dispatch({
           type: 'END_PLAYER_TURN',
           data: { type: 'pass' },
@@ -226,20 +228,7 @@ export default function Home() {
                   })
                 }}
               >
-                Tab
-              </Button>
-              <div className="text-white uppercase text-lg">Or</div>
-              <Button
-                className="w-20"
-                color="white"
-                onClick={() => {
-                  dispatch({
-                    type: 'END_PLAYER_TURN',
-                    data: { type: 'pass' },
-                  })
-                }}
-              >
-                Enter
+                Shift
               </Button>
             </>
           ) : (
