@@ -5,9 +5,6 @@ type BaseProps = {}
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
 
-/**
- * Primary UI component for user interaction.
- */
 export const IconButton = forwardRef(function IconButton(
   { children, className, ...rest }: Props,
   ref: Ref<HTMLButtonElement>,

@@ -9,9 +9,6 @@ type BaseProps = {
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
 
-/**
- * Primary UI component for user interaction.
- */
 export const Button = forwardRef(function Button(
   {
     color = 'black',

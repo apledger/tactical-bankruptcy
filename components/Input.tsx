@@ -5,9 +5,6 @@ type BaseProps = {}
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps>
 
-/**
- * Primary UI component for user interaction.
- */
 export const Input = forwardRef(function Input(
   { className, ...rest }: Props,
   ref: Ref<HTMLInputElement>,
