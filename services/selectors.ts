@@ -138,3 +138,11 @@ export function getFocusedPlayer(state: State): Player | null {
 
   return getPlayer(state, state.focusedPlayerId)
 }
+
+export function getPlayerLongestTurn(state: State, playerId: string): number {
+  const turns = getPlayerTurns(state, playerId)
+
+  return Math.max(
+    ...turns.map(({ startTime, endTime }) => (startTime && endTime ? endTime - startTime : 0)),
+  )
+}

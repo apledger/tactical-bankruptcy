@@ -7,8 +7,8 @@ import {
   getTotalGameTime,
   getTotalPlayerActions,
   getTotalPlayerReactions,
-  getTotalPlayerPasses,
   getFocusedPlayer,
+  getPlayerLongestTurn,
 } from '../services/selectors'
 import { FactionBadge } from '../components/FactionBadge'
 import { FactionName } from '../components/FactionName'
@@ -19,6 +19,7 @@ import { StatBadge } from '../components/StatBadge'
 import { useGameContext } from '../services/useGameContext'
 import { useRouter } from 'next/router'
 import { Score } from '../services/types'
+import { msToMS } from '../components/Timer'
 
 function msToHMS(ms: number): string {
   const seconds = Math.floor((ms / 1000) % 60)
@@ -136,7 +137,7 @@ export default function Home() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
-                    Name
+                    Player
                   </th>
                   <th
                     scope="col"
@@ -154,13 +155,13 @@ export default function Home() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
-                    Passes
+                    Longest Turn
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider"
                   >
-                    Time
+                    Total Time
                   </th>
                   <th
                     scope="col"
@@ -192,7 +193,9 @@ export default function Home() {
                         <div className="text-xl">{getTotalPlayerReactions(state, player.id)}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-xl">{getTotalPlayerPasses(state, player.id)}</div>
+                        <div className="text-xl">
+                          {msToMS(getPlayerLongestTurn(state, player.id))}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-xl">
