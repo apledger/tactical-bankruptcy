@@ -4,7 +4,7 @@ import { ReactNode, ComponentPropsWithoutRef } from 'react'
 type BaseProps = {
   label: string | ReactNode
   value?: string | ReactNode
-  color?: 'gray' | 'orange'
+  color?: 'gray' | 'orange' | 'clear'
 }
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
@@ -15,7 +15,11 @@ export function StatBadge({ className, label, color = 'gray', value }: Props) {
       className={classNames(
         className,
         'h-12 px-4 flex flex-col justify-center items-center uppercase',
-        { gray: 'bg-zinc-300 text-black', orange: 'bg-amber-600 text-white' }[color],
+        {
+          gray: 'bg-zinc-300 text-black',
+          orange: 'bg-amber-600 text-white',
+          clear: 'bg-transparent text-white',
+        }[color],
       )}
     >
       {value != null ? (

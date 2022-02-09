@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import * as Yup from 'yup'
 
@@ -13,6 +13,7 @@ import { IconButton } from '../components/IconButton'
 import { Input } from '../components/Input'
 import { StatBadge } from '../components/StatBadge'
 import { factions } from '../services/factions'
+import { Faction } from '../services/types'
 import { getOrderedPlayers } from '../services/selectors'
 import { useGameContext } from '../services/useGameContext'
 
@@ -52,6 +53,8 @@ export default function Setup() {
     validationSchema,
   })
   const nameInput = useRef<HTMLInputElement>(null)
+  const [hoveredFaction, setHoveredFaction] = useState<Faction | null>(null)
+  const selectedFaction = factions.find(faction => faction.id === factionId)
 
   useHotkeys('cmd+z, ctrl+z', () => dispatch({ type: 'UNDO' }), [dispatch])
   useHotkeys('cmd+shift+z, ctrl+shift+z, cmd+y, ctrl+y', () => dispatch({ type: 'REDO' }), [
@@ -84,15 +87,18 @@ export default function Setup() {
         </div>
         <div className="flex-grow flex items-center">
           <form
-            className="flex flex-col gap-10 max-w-5xl m-auto w-full items-center"
+            className="flex flex-col gap-10 max-w-5xl m-auto w-full items-center relative"
             onSubmit={handleSubmit}
           >
+            {errors.factionId && touched.factionId && (
+              <div className="absolute bottom-full mb-4 text-lg text-red-500 uppercase justify-center w-full flex">
+                Faction is required
+              </div>
+            )}
+            <div className="uppercase text-3xl">
+              {hoveredFaction?.name ?? selectedFaction?.name ?? 'Please select a faction'}
+            </div>
             <div className="grid grid-cols-6 gap-4">
-              {errors.factionId && touched.factionId && (
-                <div className="absolute bottom-full mb-4 text-lg text-red-500 uppercase justify-center w-full flex">
-                  Please select a faction
-                </div>
-              )}
               {factions.map(faction => {
                 const selectedFactionColors = players
                   .map(player => factions.find(faction => faction.id === player.factionId)?.color)
@@ -118,6 +124,8 @@ export default function Setup() {
                       setFieldValue('factionId', faction.id)
                       nameInput.current?.focus()
                     }}
+                    onPointerEnter={() => setHoveredFaction(faction)}
+                    onPointerLeave={() => setHoveredFaction(null)}
                   />
                 )
               })}
@@ -147,17 +155,21 @@ export default function Setup() {
 
         <div className="bg-black h-20 flex items-center justify-between px-4 gap-2 min-w-0">
           <div className="flex gap-4">
-            <StatBadge label="Players" />
-            <div className="flex gap-2">
-              {orderedPlayers.map(player => (
-                <FactionBadge
-                  key={player.id}
-                  className="cursor-default"
-                  size="small"
-                  factionId={player.factionId}
-                />
-              ))}
-            </div>
+            {orderedPlayers.length && (
+              <>
+                <StatBadge label="Players:" color="clear" />
+                <div className="flex gap-2">
+                  {orderedPlayers.map(player => (
+                    <FactionBadge
+                      key={player.id}
+                      className="cursor-default"
+                      size="small"
+                      factionId={player.factionId}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
           <Button
             className="flex-shrink-0"
