@@ -48,9 +48,7 @@ export default function Home() {
   }, [state, router])
 
   useHotkeys('cmd+z, ctrl+z', () => dispatch({ type: 'UNDO' }), [dispatch])
-  useHotkeys('cmd+shift+z, ctrl+shift+z, cmd+y, ctrl+y', () => dispatch({ type: 'REDO' }), [
-    dispatch,
-  ])
+  useHotkeys('cmd+y, ctrl+y', () => dispatch({ type: 'REDO' }), [dispatch])
   useHotkeys(
     'space',
     e => {
