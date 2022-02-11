@@ -10,6 +10,9 @@ type BaseProps = {
   player: Player
   startTime: number | null
   totalTime: number
+  roundTime: number
+  roundActions: number
+  roundReactions: number
   isPassed: boolean
   isActive: boolean
   isHovered: boolean
@@ -23,6 +26,9 @@ export function PlayerMarker({
   isPassed,
   isActive = false,
   totalTime,
+  roundTime,
+  roundActions,
+  roundReactions,
   isHovered = false,
   className,
   ...rest
@@ -59,17 +65,29 @@ export function PlayerMarker({
           Passed
         </div>
       )}
-      <div className="uppercase flex justify-center w-full absolute top-full mt-3">
+      <div className="absolute top-full w-full mt-3">
         {isActive ? (
-          startTime != null && <Timer className="text-3xl" startTime={startTime} />
+          startTime != null && (
+            <div className="grid gap-3 justify-center">
+              <Timer className="text-3xl" startTime={startTime} />
+            </div>
+          )
         ) : (
           <div
             className={classNames(
-              'text-2xl transition-opacity',
+              'transition-opacity grid uppercase text-center',
               !isHovered && 'opacity-0 group-hover:opacity-100',
             )}
           >
-            {msToMS(totalTime)}
+            <div className="text-2xl mb-3">{msToMS(roundTime)}</div>
+            <div className="text-lg text-zinc-600">{`${roundActions} ${
+              roundActions === 1 ? 'action' : 'actions'
+            }`}</div>
+            {roundReactions > 0 && (
+              <div className="text-lg text-zinc-600">{`${roundReactions} ${
+                roundReactions === 1 ? 'reaction' : 'reactions'
+              }`}</div>
+            )}
           </div>
         )}
       </div>

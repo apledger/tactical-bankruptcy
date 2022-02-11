@@ -102,6 +102,31 @@ export function getTotalPlayerReactions(state: State, id: string): number {
   return playerTurns.filter(turn => turn.type === 'reaction').length
 }
 
+export function getRoundPlayerTime(state: State, id: string, roundIndex?: number): number {
+  const playerTurns = getPlayerTurns(state, id)
+
+  return playerTurns
+    .filter(turn => turn.roundIndex === (roundIndex ?? state.activeRoundIndex))
+    .map(turn => (turn.endTime ?? Date.now()) - turn.startTime)
+    .reduce((a, b) => a + b, 0)
+}
+
+export function getRoundPlayerActions(state: State, id: string, roundIndex?: number): number {
+  const playerTurns = getPlayerTurns(state, id)
+
+  return playerTurns.filter(
+    turn => turn.roundIndex === (roundIndex ?? state.activeRoundIndex) && turn.type === 'action',
+  ).length
+}
+
+export function getRoundPlayerReactions(state: State, id: string, roundIndex?: number): number {
+  const playerTurns = getPlayerTurns(state, id)
+
+  return playerTurns.filter(
+    turn => turn.roundIndex === (roundIndex ?? state.activeRoundIndex) && turn.type === 'reaction',
+  ).length
+}
+
 export function getTotalPlayerPasses(state: State, id: string): number {
   const playerTurns = getPlayerTurns(state, id)
 

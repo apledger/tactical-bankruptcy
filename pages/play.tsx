@@ -21,6 +21,9 @@ import {
   getActiveRoundTurns,
   getActiveRound,
   getIsLastRound,
+  getRoundPlayerTime,
+  getRoundPlayerActions,
+  getRoundPlayerReactions,
 } from '../services/selectors'
 import { PlayerMarker } from '../components/PlayerMarker'
 import { FactionBadge } from '../components/FactionBadge'
@@ -166,6 +169,9 @@ export default function Home() {
               player={player}
               startTime={activeTurn && index === activePlayerIndex ? activeTurn.startTime : null}
               totalTime={getTotalPlayerTime(state, player.id)}
+              roundTime={getRoundPlayerTime(state, player.id)}
+              roundActions={getRoundPlayerActions(state, player.id)}
+              roundReactions={getRoundPlayerReactions(state, player.id)}
               isActive={activeTurn != null && index === activePlayerIndex}
               isPassed={getHasPlayerPassed(state, player.id)}
               isHovered={isRoundDone}
@@ -176,7 +182,9 @@ export default function Home() {
       <div className="h-20 bg-white flex items-center justify-end p-4">
         {activeTurn && (
           <div className="flex gap-4 items-center">
-            <div className="text-black uppercase text-lg">Done</div>
+            <div className="text-black uppercase text-lg">
+              {hasActivePlayerPassed ? 'Reaction' : 'Action'}
+            </div>
             <Button
               className="w-20"
               onClick={() => {
