@@ -1,4 +1,8 @@
-import { faArrowAltCircleLeft, faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowAltCircleDown,
+  faArrowAltCircleLeft,
+  faArrowAltCircleRight,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
 import { useFormik } from 'formik'
@@ -65,7 +69,7 @@ export default function Setup() {
     <>
       <div className="hidden lg:flex flex-col h-screen">
         <div className="flex h-20 p-4 items-center justify-between">
-          <StatBadge label="Game setup" />
+          <StatBadge label="Game setup" color="clearDark" />
           <div className="flex gap-4">
             <IconButton
               disabled={!canUndo}
@@ -157,7 +161,7 @@ export default function Setup() {
           <div className="flex gap-4">
             {orderedPlayers.length && (
               <>
-                <StatBadge label="Players:" color="clear" />
+                <StatBadge label="Players:" color="clearLight" />
                 <div className="flex gap-2">
                   {orderedPlayers.map(player => (
                     <FactionBadge
@@ -172,12 +176,21 @@ export default function Setup() {
             )}
           </div>
           <Button
-            className="flex-shrink-0"
+            className="flex-shrink-0 relative"
             color="white"
             disabled={players.length < 2}
             onClick={() => router.push('/play')}
           >
             Create game
+            {players.length >= 2 && (
+              <div className="absolute bottom-full mb-5 left-1/2 transform -translate-x-1/2">
+                <FontAwesomeIcon
+                  icon={faArrowAltCircleDown}
+                  className="animate-bounce text-black"
+                  size="2x"
+                />
+              </div>
+            )}
           </Button>
         </div>
       </div>

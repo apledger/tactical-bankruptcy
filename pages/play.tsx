@@ -203,11 +203,11 @@ export default function Home() {
         <div className="flex gap-4">
           {activeRoundIndex === null ? (
             <>
-              <StatBadge label="Ready to play?" color="clear" />
+              <StatBadge label="Ready to play?" color="clearLight" />
             </>
           ) : activeRoundIndex < 7 ? (
             <>
-              <StatBadge label={`Next Round: ${activeRoundIndex + 2}`} color="clear" />
+              <StatBadge label={`Next Round: ${activeRoundIndex + 2}`} color="clearLight" />
               <div className="flex gap-2">
                 {getOrderedPlayers(state, activeRoundIndex + 1).map(player => (
                   <FactionBadge key={player.id} factionId={player.factionId} size="small" />
@@ -216,7 +216,7 @@ export default function Home() {
             </>
           ) : (
             <>
-              <StatBadge label={`Last Round`} color="clear" />
+              <StatBadge label={`Last Round`} color="clearLight" />
             </>
           )}
         </div>
