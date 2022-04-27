@@ -35,7 +35,7 @@ export function PlayerMarker({
 }: Props) {
   return (
     <motion.div {...rest} className={classNames(className, 'relative group')}>
-      <div className="uppercase flex justify-center w-full absolute bottom-full mb-3">
+      <div className="uppercase flex justify-center text-center w-full absolute bottom-full mb-3">
         {isActive ? (
           <div className="text-3xl"> {player.name}</div>
         ) : (
@@ -68,8 +68,16 @@ export function PlayerMarker({
       <div className="absolute top-full w-full mt-3">
         {isActive ? (
           startTime != null && (
-            <div className="grid gap-3 justify-center">
+            <div className="grid gap-3 text-center uppercase">
               <Timer className="text-3xl" startTime={startTime} />
+              <div className="text-2xl text-zinc-600">{`${roundActions} ${
+                roundActions === 1 ? 'action' : 'actions'
+              }`}</div>
+              {roundReactions > 0 && (
+                <div className="text-xl text-zinc-600">{`${roundReactions} ${
+                  roundReactions === 1 ? 'reaction' : 'reactions'
+                }`}</div>
+              )}
             </div>
           )
         ) : (
