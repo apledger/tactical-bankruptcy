@@ -38,7 +38,7 @@ export type Actions =
   | { type: 'START_ROUND'; data: { time: number } }
   | { type: 'END_PLAYER_TURN'; data: { type: Turn['type']; time: number } }
   | { type: 'ADD_PLAYER'; data: { factionId: string; name: string } }
-  | { type: 'UPDATE_PLAYER_SCORE'; data: { playerId: string; value: number; key: string } }
+  | { type: 'UPDATE_PLAYER_SCORE'; data: { playerId: string; value?: number; key: string } }
   | { type: 'FOCUS_PLAYER'; data: { playerId: string } }
   | { type: 'BLUR_PLAYER' }
 

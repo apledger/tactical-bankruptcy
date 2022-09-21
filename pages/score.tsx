@@ -63,7 +63,13 @@ export default function Home() {
 
       <div className="pt-10 overflow-auto">
         {focusedPlayer ? (
-          <div className="uppercase w-96 divide-y divide-zinc-200 border border-zinc-200 m-auto">
+          <form
+            className="uppercase w-96 divide-y divide-zinc-200 border border-zinc-200 m-auto"
+            onSubmit={() => {
+              console.log('submitting')
+              dispatch({ type: 'BLUR_PLAYER' })
+            }}
+          >
             <div className="flex justify-between p-4 bg-zinc-100">
               <div className="flex items-center">
                 <div className="flex-shrink-0 h-12 w-12">
@@ -74,27 +80,29 @@ export default function Home() {
                   <FactionName className="text-gray-500" factionId={focusedPlayer.factionId} />
                 </div>
               </div>
-              <Button className="w-20" onClick={() => dispatch({ type: 'BLUR_PLAYER' })}>
+              <Button className="w-20" type="submit">
                 Done
               </Button>
             </div>
             <div className="grid gap-2 p-4">
               {scoreFields.map(({ key, label }) => (
                 <div key={key} className="flex justify-between items-center gap-4">
-                  <div className="text-xl">{label}</div>
+                  <label htmlFor={key} className="text-xl">
+                    {label}
+                  </label>
                   <Input
+                    id={key}
                     type="number"
                     min={0}
                     className="w-20 text-center appearance-none hover:appearance-none"
-                    value={focusedPlayer.score?.[key] ?? 0}
-                    onFocus={e => e.currentTarget.select()}
+                    value={focusedPlayer.score?.[key]}
                     onChange={e =>
                       dispatch({
                         type: 'UPDATE_PLAYER_SCORE',
                         data: {
                           playerId: focusedPlayer.id,
                           value: Number.isNaN(e.currentTarget.valueAsNumber)
-                            ? 0
+                            ? undefined
                             : e.currentTarget.valueAsNumber,
                           key,
                         },
@@ -124,10 +132,10 @@ export default function Home() {
             <div className="flex p-4 justify-between">
               <div className="text-xl">Total</div>
               <div className="text-xl w-20 text-center">
-                {Object.values(focusedPlayer.score ?? {}).reduce((a, b) => a + b, 0)}
+                {Object.values(focusedPlayer.score ?? {}).reduce((a = 0, b = 0) => a + b, 0)}
               </div>
             </div>
-          </div>
+          </form>
         ) : (
           <div className="max-w-5xl m-auto">
             <table className="min-w-full divide-y divide-zinc-200 border border-zinc-200">
@@ -211,7 +219,7 @@ export default function Home() {
                           hover={player.score != null}
                         >
                           {player.score
-                            ? Object.values(player.score).reduce((a, b) => a + b)
+                            ? Object.values(player.score).reduce((a = 0, b = 0) => a + b)
                             : 'Set'}
                         </Button>
                       </td>

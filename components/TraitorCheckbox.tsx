@@ -14,6 +14,7 @@ export const TraitorCheckbox = forwardRef(function TraitorCheckbox(
 ) {
   return (
     <button
+      type="button"
       onClick={() => onChange(!value)}
       className={classNames(
         className,
