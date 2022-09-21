@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { ComponentPropsWithoutRef, useEffect, useState } from 'react'
-import { useTimer } from '../services/useTimer'
+import { useClock } from '../services/useClock'
 
 type BaseProps = {
   startTime: number
@@ -16,11 +16,14 @@ export function msToMS(ms: number): string {
 }
 
 export function Timer({ startTime, className, ...rest }: Props) {
-  const { elapsed } = useTimer(startTime)
+  const clock = useClock()
+  const [elapsed, setElapsed] = useState(clock.now())
+
+  useEffect(() => clock.subscribe(setElapsed), [clock])
 
   return (
     <div {...rest} className={classNames('uppercase', className)}>
-      {msToMS(elapsed)}
+      {msToMS(elapsed - startTime)}
     </div>
   )
 }

@@ -2,15 +2,15 @@ import { AppProps } from 'next/app'
 
 import '../styles/globals.css'
 import { GameContextProvider } from '../services/useGameContext'
-import { TimerProvider } from '../services/useTimer'
+import { ClockProvider } from '../services/useClock'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <TimerProvider>
+    <ClockProvider>
       <GameContextProvider>
         <Component {...pageProps} />
       </GameContextProvider>
-    </TimerProvider>
+    </ClockProvider>
   )
 }
 

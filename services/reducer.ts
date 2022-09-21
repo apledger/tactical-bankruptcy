@@ -32,7 +32,7 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
         ...state,
         rounds: [
           ...state.rounds.slice(0, -1),
-          { ...nextRound, startTime: Date.now() },
+          { ...nextRound, startTime: action.data.time },
           {
             startTime: null,
             playerOrder: [],
@@ -41,7 +41,7 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
         turns: [
           ...state.turns,
           {
-            startTime: Date.now(),
+            startTime: action.data.time,
             roundIndex: nextRoundIndex,
             playerId: nextRound.playerOrder[0],
           },
@@ -68,12 +68,12 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
         ...state,
         turns: [
           ...state.turns.slice(0, -1),
-          { ...activeTurn, endTime: Date.now(), type: action.data.type },
+          { ...activeTurn, endTime: action.data.time, type: action.data.type },
           ...(isLastPassForRound
             ? []
             : [
                 {
-                  startTime: Date.now(),
+                  startTime: action.data.time,
                   roundIndex: state.activeRoundIndex,
                   playerId: nextPlayer.id,
                 },
@@ -82,7 +82,7 @@ export function reducer<S extends State, A extends Actions>(state: S, action: A)
         rounds: isFirstTimePassing
           ? [
               ...(isLastPassForRound
-                ? [...state.rounds.slice(0, -2), { ...activeRound, endTime: Date.now() }]
+                ? [...state.rounds.slice(0, -2), { ...activeRound, endTime: action.data.time }]
                 : state.rounds.slice(0, -1)),
               { ...nextRound, playerOrder: [...nextRound.playerOrder, activePlayer.id] },
             ]

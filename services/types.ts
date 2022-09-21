@@ -35,8 +35,8 @@ export type Player = {
 export type Actions =
   | { type: 'UNDO' }
   | { type: 'REDO' }
-  | { type: 'START_ROUND' }
-  | { type: 'END_PLAYER_TURN'; data: { type: Turn['type'] } }
+  | { type: 'START_ROUND'; data: { time: number } }
+  | { type: 'END_PLAYER_TURN'; data: { type: Turn['type']; time: number } }
   | { type: 'ADD_PLAYER'; data: { factionId: string; name: string } }
   | { type: 'UPDATE_PLAYER_SCORE'; data: { playerId: string; value: number; key: string } }
   | { type: 'FOCUS_PLAYER'; data: { playerId: string } }

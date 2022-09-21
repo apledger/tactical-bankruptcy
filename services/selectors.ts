@@ -86,7 +86,7 @@ export function getTotalPlayerTime(state: State, id: string): number {
   const playerTurns = getPlayerTurns(state, id)
 
   return playerTurns
-    .map(turn => (turn.endTime ?? Date.now()) - turn.startTime)
+    .map(turn => (turn.endTime != null ? turn.endTime - turn.startTime : 0))
     .reduce((a, b) => a + b, 0)
 }
 
@@ -107,7 +107,7 @@ export function getRoundPlayerTime(state: State, id: string, roundIndex?: number
 
   return playerTurns
     .filter(turn => turn.roundIndex === (roundIndex ?? state.activeRoundIndex))
-    .map(turn => (turn.endTime ?? Date.now()) - turn.startTime)
+    .map(turn => (turn.endTime != null ? turn.endTime - turn.startTime : 0))
     .reduce((a, b) => a + b, 0)
 }
 
@@ -153,7 +153,9 @@ export function getTotalGameTime(state: State): number {
   const firstRound = state.rounds[0]
   const lastRound = state.rounds[LAST_ROUND_INDEX]
 
-  if (lastRound?.endTime && firstRound.startTime) return lastRound.endTime - firstRound.startTime
+  if (lastRound?.endTime != null && firstRound.startTime != null) {
+    return lastRound.endTime - firstRound.startTime
+  }
 
   return 0
 }
@@ -168,6 +170,8 @@ export function getPlayerLongestTurn(state: State, playerId: string): number {
   const turns = getPlayerTurns(state, playerId)
 
   return Math.max(
-    ...turns.map(({ startTime, endTime }) => (startTime && endTime ? endTime - startTime : 0)),
+    ...turns.map(({ startTime, endTime }) =>
+      startTime != null && endTime != null ? endTime - startTime : 0,
+    ),
   )
 }

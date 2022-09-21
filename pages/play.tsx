@@ -33,6 +33,7 @@ import { IconButton } from '../components/IconButton'
 import { StatBadge } from '../components/StatBadge'
 import { CombatStars } from '../components/CombatStars'
 import { msToMS, Timer } from '../components/Timer'
+import { useClock } from '../services/useClock'
 
 export default function Home() {
   const router = useRouter()
@@ -44,6 +45,27 @@ export default function Home() {
   const isRoundDone = getIsActiveRoundDone(state)
   const roundTurns = getActiveRoundTurns(state)
   const isLastRound = getIsLastRound(state)
+  const clock = useClock()
+
+  function startRound() {
+    clock.start()
+
+    dispatch({ type: 'START_ROUND', data: { time: clock.now() } })
+  }
+
+  function submitAction() {
+    dispatch({
+      type: 'END_PLAYER_TURN',
+      data: { type: hasActivePlayerPassed ? 'reaction' : 'action', time: clock.now() },
+    })
+  }
+
+  function submitPass() {
+    dispatch({
+      type: 'END_PLAYER_TURN',
+      data: { type: 'pass', time: clock.now() },
+    })
+  }
 
   useEffect(() => {
     if (state.players.length === 0) router.push('/setup')
@@ -58,15 +80,12 @@ export default function Home() {
       e.preventDefault()
 
       if (activeTurn) {
-        dispatch({
-          type: 'END_PLAYER_TURN',
-          data: { type: hasActivePlayerPassed ? 'reaction' : 'action' },
-        })
+        submitAction()
       } else {
         if (isLastRound) {
           router.push('/score')
         } else {
-          dispatch({ type: 'START_ROUND' })
+          startRound()
         }
       }
     },
@@ -80,10 +99,7 @@ export default function Home() {
       if (e.key === 'Shift' && activeTurn) {
         e.preventDefault()
 
-        dispatch({
-          type: 'END_PLAYER_TURN',
-          data: { type: 'pass' },
-        })
+        submitPass()
       }
     },
     [dispatch, activeTurn],
@@ -97,11 +113,11 @@ export default function Home() {
           {roundTurns.length > 0 && (
             <StatBadge label="Turn" value={Math.ceil(roundTurns.length / players.length)} />
           )}
-          {activeRound.startTime && (
+          {activeRound.startTime != null && (
             <StatBadge
               label="Time"
               value={
-                isRoundDone && activeRound.endTime ? (
+                isRoundDone && activeRound.endTime != null ? (
                   <span>{msToMS(activeRound.endTime - activeRound.startTime)}</span>
                 ) : (
                   <Timer startTime={activeRound.startTime} />
@@ -110,7 +126,7 @@ export default function Home() {
             />
           )}
 
-          {isRoundDone && activeRound.endTime && (
+          {isRoundDone && activeRound.endTime != null && (
             <>
               <StatBadge
                 label={
@@ -185,15 +201,7 @@ export default function Home() {
             <div className="text-black uppercase text-lg">
               {hasActivePlayerPassed ? 'Reaction' : 'Action'}
             </div>
-            <Button
-              className="w-20"
-              onClick={() => {
-                dispatch({
-                  type: 'END_PLAYER_TURN',
-                  data: { type: hasActivePlayerPassed ? 'reaction' : 'action' },
-                })
-              }}
-            >
+            <Button className="w-20" onClick={submitAction}>
               Space
             </Button>
           </div>
@@ -224,16 +232,7 @@ export default function Home() {
           {activeTurn ? (
             <>
               <div className="text-white uppercase text-lg">Pass</div>
-              <Button
-                className="w-20"
-                color="white"
-                onClick={() => {
-                  dispatch({
-                    type: 'END_PLAYER_TURN',
-                    data: { type: 'pass' },
-                  })
-                }}
-              >
+              <Button className="w-20" color="white" onClick={submitPass}>
                 Shift
               </Button>
             </>
@@ -253,7 +252,7 @@ export default function Home() {
                   if (isLastRound) {
                     router.push('/score')
                   } else {
-                    dispatch({ type: 'START_ROUND' })
+                    startRound()
                   }
                 }}
               >

@@ -51,6 +51,8 @@ export default function Home() {
     if (state.players.length === 0) router.push('/setup')
   }, [state, router])
 
+  console.log(getTotalGameTime(state))
+
   return (
     <div className="h-screen flex flex-col w-full">
       <div className="h-20 p-4 flex items-center justify-between">
