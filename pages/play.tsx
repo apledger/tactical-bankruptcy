@@ -3,11 +3,16 @@
 import { useEffect } from 'react'
 import classNames from 'classnames'
 import {
-  faArrowAltCircleDown,
-  faArrowAltCircleLeft,
-  faArrowAltCircleRight,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+  ArrowDownIcon,
+  ArrowLeftCircleIcon,
+  ArrowLeftIcon,
+  ArrowRightCircleIcon,
+  ArrowRightIcon,
+  PauseCircleIcon,
+  PauseIcon,
+  PlayCircleIcon,
+  PlayIcon,
+} from '@heroicons/react/24/solid'
 import { useHotkeys } from 'react-hotkeys-hook'
 
 import { Button } from '../components/Button'
@@ -48,12 +53,14 @@ export default function Home() {
   const clock = useClock()
 
   function startRound() {
-    clock.start()
+    if (clock.isPaused) clock.start()
 
     dispatch({ type: 'START_ROUND', data: { time: clock.now() } })
   }
 
   function submitAction() {
+    if (clock.isPaused) clock.start()
+
     dispatch({
       type: 'END_PLAYER_TURN',
       data: { type: hasActivePlayerPassed ? 'reaction' : 'action', time: clock.now() },
@@ -61,6 +68,8 @@ export default function Home() {
   }
 
   function submitPass() {
+    if (clock.isPaused) clock.start()
+
     dispatch({
       type: 'END_PLAYER_TURN',
       data: { type: 'pass', time: clock.now() },
@@ -89,7 +98,7 @@ export default function Home() {
         }
       }
     },
-    [dispatch, hasActivePlayerPassed, activeTurn, isLastRound],
+    [dispatch, hasActivePlayerPassed, activeTurn, isLastRound, clock],
   )
 
   // Use * here because 'shift' doesn't fire
@@ -102,7 +111,7 @@ export default function Home() {
         submitPass()
       }
     },
-    [dispatch, activeTurn],
+    [dispatch, activeTurn, clock],
   )
 
   return (
@@ -145,14 +154,22 @@ export default function Home() {
             </>
           )}
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-3">
+          <IconButton
+            onClick={() => {
+              if (clock.isPaused) clock.start()
+              else clock.pause()
+            }}
+          >
+            {clock.isPaused ? <PlayIcon className="w-6 h-6" /> : <PauseIcon className="w-6 h-6" />}
+          </IconButton>
           <IconButton
             disabled={!canUndo}
             onClick={() => {
               dispatch({ type: 'UNDO' })
             }}
           >
-            <FontAwesomeIcon icon={faArrowAltCircleLeft} size="2x" />
+            <ArrowLeftIcon className="w-6 h-6" />
           </IconButton>
           <IconButton
             disabled={!canRedo}
@@ -160,7 +177,7 @@ export default function Home() {
               dispatch({ type: 'REDO' })
             }}
           >
-            <FontAwesomeIcon icon={faArrowAltCircleRight} size="2x" />
+            <ArrowRightIcon className="w-6 h-6" />
           </IconButton>
         </div>
       </div>
@@ -259,11 +276,7 @@ export default function Home() {
                 Space
                 {activeRoundIndex === null && (
                   <div className="absolute bottom-full mb-5 left-1/2 transform -translate-x-1/2">
-                    <FontAwesomeIcon
-                      icon={faArrowAltCircleDown}
-                      className="animate-bounce text-black"
-                      size="2x"
-                    />
+                    <ArrowDownIcon className="animate-bounce text-black w-6 h-6" />
                   </div>
                 )}
               </Button>

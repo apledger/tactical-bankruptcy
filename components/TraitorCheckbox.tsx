@@ -1,7 +1,5 @@
 import { ComponentPropsWithoutRef, forwardRef, Ref } from 'react'
 import classNames from 'classnames'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type BaseProps = {
   value: boolean

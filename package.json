@@ -10,10 +10,7 @@
     "svg": "svgr --typescript --no-svgo public/icons -d lib/icons"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-brands-svg-icons": "^5.15.4",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-fontawesome": "^0.1.16",
+    "@heroicons/react": "^2.0.11",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.7",
     "formik": "^2.2.9",
