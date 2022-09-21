@@ -24,12 +24,16 @@ export function FactionBadge({
   return faction ? (
     <button
       {...rest}
-      className={classNames('relative rounded-full transition-all', className)}
-      style={{
-        width: { small: 48, medium: 150, large: 300 }[size],
-        height: { small: 48, medium: 150, large: 300 }[size],
-        backgroundColor: faction.color,
-      }}
+      className={classNames(
+        'relative rounded-full transition-all',
+        {
+          small: 'w-[48px] h-[48px]',
+          medium: 'w-[100px] h-[100px] md:w-[150px] md:h-[150px]',
+          large: 'w-[300px] h-[300px]',
+        }[size],
+        className,
+      )}
+      style={{ backgroundColor: faction.color }}
     >
       <div
         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all inline-flex"

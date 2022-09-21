@@ -62,7 +62,7 @@ export default function Setup() {
 
   return (
     <>
-      <div className="hidden lg:flex flex-col h-screen">
+      <div className="hidden sm:flex flex-col h-screen">
         <div className="flex h-20 p-4 items-center justify-between">
           <StatBadge label="Game setup" color="clearDark" />
           <div className="flex gap-3">
@@ -185,7 +185,7 @@ export default function Setup() {
           </Button>
         </div>
       </div>
-      <div className="flex lg:hidden flex-col h-screen items-center justify-center p-10">
+      <div className="flex sm:hidden flex-col h-screen items-center justify-center p-10">
         <div className="max-w-md text-3xl text-center uppercase">
           Tactical Bankruptcy is best experienced with a keyboard
         </div>

@@ -51,8 +51,6 @@ export default function Home() {
     if (state.players.length === 0) router.push('/setup')
   }, [state, router])
 
-  console.log(getTotalGameTime(state))
-
   return (
     <div className="h-screen flex flex-col w-full">
       <div className="h-20 p-4 flex items-center justify-between">
@@ -63,9 +61,9 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full flex justify-center pt-10">
+      <div className="pt-10 overflow-auto">
         {focusedPlayer ? (
-          <div className="uppercase w-96 divide-y divide-zinc-200 border border-zinc-200">
+          <div className="uppercase w-96 divide-y divide-zinc-200 border border-zinc-200 m-auto">
             <div className="flex justify-between p-4 bg-zinc-100">
               <div className="flex items-center">
                 <div className="flex-shrink-0 h-12 w-12">
@@ -131,7 +129,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="max-w-5xl w-9/12">
+          <div className="max-w-5xl m-auto">
             <table className="min-w-full divide-y divide-zinc-200 border border-zinc-200">
               <thead className="bg-zinc-100">
                 <tr>

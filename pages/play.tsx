@@ -39,6 +39,7 @@ import { StatBadge } from '../components/StatBadge'
 import { CombatStars } from '../components/CombatStars'
 import { msToMS, Timer } from '../components/Timer'
 import { useClock } from '../services/useClock'
+import { factions } from '../services/factions'
 
 export default function Home() {
   const router = useRouter()
@@ -141,7 +142,7 @@ export default function Home() {
                 label={
                   <div className="flex items-center gap-2">
                     <CombatStars />
-                    <span>Combat and Upkeep</span>
+                    <span className="hidden md:block">Combat and Upkeep</span>
                   </div>
                 }
                 color="orange"
@@ -183,18 +184,7 @@ export default function Home() {
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div
-          className={classNames(
-            'flex gap-4 items-center justify-center',
-            {
-              2: 'grid-cols-2',
-              3: 'grid-cols-3',
-              4: 'grid-cols-4',
-              5: 'grid-cols-5',
-              6: 'grid-cols-6',
-            }[players.length],
-          )}
-        >
+        <div className="flex gap-4 items-center justify-center hidden md:flex">
           {getOrderedPlayers(state).map((player, index) => (
             <PlayerMarker
               key={player.id}
@@ -210,6 +200,43 @@ export default function Home() {
               isHovered={isRoundDone}
             />
           ))}
+        </div>
+        <div className="flex flex-wrap gap-3 items-center justify-center md:hidden">
+          {getOrderedPlayers(state).map((player, index) => {
+            const isActive = activeTurn != null && index === activePlayerIndex
+            return (
+              <PlayerMarker
+                key={player.id}
+                className={classNames(!isActive && !isRoundDone && activeTurn && 'hidden')}
+                player={player}
+                startTime={isActive ? activeTurn.startTime : null}
+                totalTime={getTotalPlayerTime(state, player.id)}
+                roundTime={getRoundPlayerTime(state, player.id)}
+                roundActions={getRoundPlayerActions(state, player.id)}
+                roundReactions={getRoundPlayerReactions(state, player.id)}
+                isActive={isActive}
+                isPassed={getHasPlayerPassed(state, player.id)}
+                isHovered={isRoundDone}
+              />
+            )
+          })}
+          <div className="absolute right-5 grid gap-3">
+            {getOrderedPlayers(state).map((player, index) => {
+              const isActive = activeTurn != null && index === activePlayerIndex
+              const faction = factions.find(faction => faction.id === player.factionId)
+
+              return (
+                <div
+                  key={player.id}
+                  className={classNames('w-4 h-4 rounded-full')}
+                  style={{
+                    backgroundColor: faction?.color,
+                    boxShadow: isActive ? `0 0 0 2px white, 0 0 0 4px ${faction?.color}` : '',
+                  }}
+                />
+              )
+            })}
+          </div>
         </div>
       </div>
       <div className="h-20 bg-white flex items-center justify-end p-4">

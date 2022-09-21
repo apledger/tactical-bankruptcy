@@ -34,7 +34,7 @@ export function PlayerMarker({
   ...rest
 }: Props) {
   return (
-    <motion.div {...rest} className={classNames(className, 'relative group')}>
+    <motion.div {...rest} className={classNames('relative group', className)}>
       <div className="uppercase flex justify-center text-center w-full absolute bottom-full mb-3">
         {isActive ? (
           <div className="text-3xl"> {player.name}</div>
@@ -59,7 +59,7 @@ export function PlayerMarker({
           className={classNames(
             `absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -rotate-12
           text-white caps bg-black flex items-center justify-center uppercase transition-all border border-white`,
-            isActive ? 'w-48 h-12 text-md' : 'w-24 h-10 text-sm',
+            isActive ? 'w-48 h-12 text-md' : 'w-20 h-8 md:w-24 md:h-10 text-sm',
           )}
         >
           Passed
