@@ -86,9 +86,9 @@ export default function Setup() {
             </IconButton>
           </div>
         </div>
-        <div className="flex flex-grow flex-col items-center gap-5">
+        <div className="flex flex-grow flex-col gap-5">
           <form
-            className="flex flex-col gap-10 max-w-full m-auto w-full items-center relative"
+            className="flex flex-col gap-10 w-full items-center relative py-5"
             onSubmit={handleSubmit}
           >
             {errors.factionId && touched.factionId && (
@@ -99,12 +99,14 @@ export default function Setup() {
             <div className="uppercase text-3xl">
               {hoveredFaction?.name ?? selectedFaction?.name ?? 'Please select a faction'}
             </div>
-            <div className="grid gap-4 max-w-[1680px] w-full" style={{gridTemplateColumns: 'repeat(auto-fill, 150px)' }}>
+            <div className="grid gap-4 max-w-[960px] w-full grid-cols-6">
               {factions.map(faction => {
                 const selectedFactionColors = players
                   .map(player => factions.find(faction => faction.id === player.factionId)?.color)
                   .filter(Boolean)
-                const disabled = selectedFactionColors.includes(faction.color) || players.length === MAX_PLAYERS_NUMBER
+                const disabled =
+                  selectedFactionColors.includes(faction.color) ||
+                  players.length === MAX_PLAYERS_NUMBER
 
                 return (
                   <FactionBadge
@@ -137,12 +139,18 @@ export default function Setup() {
               <div className="flex gap-2 relative">
                 <Input
                   ref={nameInput}
+                  data-1p-ignore
                   className="flex-grow"
                   value={name}
                   onChange={({ currentTarget }) => setFieldValue('name', currentTarget.value)}
                   disabled={players.length === MAX_PLAYERS_NUMBER}
                 />
-                <Button className="flex-shrink-0" color="black" type="submit" disabled={players.length === MAX_PLAYERS_NUMBER}>
+                <Button
+                  className="flex-shrink-0"
+                  color="black"
+                  type="submit"
+                  disabled={players.length === MAX_PLAYERS_NUMBER}
+                >
                   Add Player
                 </Button>
                 {errors.name && touched.name && (

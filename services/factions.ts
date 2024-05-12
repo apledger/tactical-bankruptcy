@@ -38,31 +38,6 @@ export const factions: Faction[] = [
     icon: '/icons/orion.svg',
   },
   {
-    id: 'orange-alien',
-    name: 'Rho Indi Syndicate',
-    color: '#F2802C',
-    icon: '/icons/rho_indi.svg',
-  },
-  {
-    id: 'pink-alien',
-    name: 'Wardens of Magellan',
-    color: '#F65EB0',
-    icon: '/icons/magellan.svg',
-  },
-  {
-    id: 'white-alien-2',
-    name: 'The Exiles',
-    color: '#D3D5D7',
-    icon: '/icons/exiles.svg',
-  },
-  {
-    id: 'brown-alien',
-    name: 'The Enlightened of Lyra',
-    color: '#BE6C16',
-    icon: '/icons/lyra.svg',
-  },
-
-  {
     id: 'red-human',
     name: 'Terran Directorate',
     color: '#C62730',
@@ -97,5 +72,29 @@ export const factions: Faction[] = [
     name: 'Terran Alliance',
     color: '#3D3D3D',
     icon: '/icons/terran.svg',
-  }
+  },
+  {
+    id: 'orange-alien',
+    name: 'Rho Indi Syndicate',
+    color: '#F2802C',
+    icon: '/icons/rho_indi.svg',
+  },
+  {
+    id: 'pink-alien',
+    name: 'Wardens of Magellan',
+    color: '#F65EB0',
+    icon: '/icons/magellan.svg',
+  },
+  {
+    id: 'white-alien-2',
+    name: 'The Exiles',
+    color: '#D3D5D7',
+    icon: '/icons/exiles.svg',
+  },
+  {
+    id: 'brown-alien',
+    name: 'The Enlightened of Lyra',
+    color: '#BE6C16',
+    icon: '/icons/lyra.svg',
+  },
 ]
