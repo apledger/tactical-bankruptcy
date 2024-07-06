@@ -74,9 +74,9 @@ export const factions: Faction[] = [
     icon: '/icons/terran.svg',
   },
   {
-    id: 'orange-alien',
+    id: 'brown-alien',
     name: 'Rho Indi Syndicate',
-    color: '#F2802C',
+    color: '#BE6C16',
     icon: '/icons/rho_indi.svg',
   },
   {
@@ -92,9 +92,9 @@ export const factions: Faction[] = [
     icon: '/icons/exiles.svg',
   },
   {
-    id: 'brown-alien',
+    id: 'orange-alien',
     name: 'The Enlightened of Lyra',
-    color: '#BE6C16',
+    color: '#F2802C',
     icon: '/icons/lyra.svg',
   },
 ]
